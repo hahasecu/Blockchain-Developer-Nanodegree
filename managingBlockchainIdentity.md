@@ -1,5 +1,6 @@
-# Project#1 Managing your Blockcahin Identity
+# Project1 Managing your Blockcahin Identity
 
+Generate a new wallet address and use your wallet address to securely sign a message with your private key. Next, validate your message with your message signature
 
 - Wallet Address: 18zFbe7GP8z7e7p66M7hyEZ83DzsrZfYnh
 
