@@ -83,8 +83,6 @@ class Blockchain {
     }
 
 
-
-
     addABlockDB(key, value) {
         return new Promise((resolve, reject) => {
             db.put(key, value, (err) => {

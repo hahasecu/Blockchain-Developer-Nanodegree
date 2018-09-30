@@ -8,7 +8,15 @@ By Adrianacmy
 
 ## [Project_2](./Project_2/simpleChain.js) : Create a private blockchain ledger that persists data and validates the blockchain ledger utilizing block hashes.
 
+##
+
 ## [Bitcoin-cli](./bitcoin-cli.md)
+
+## Blockchain relavent organizations
+
+- https://traseable.com/
+- https://new.consensys.net/: wetsite color solution is great
+- https://viant.io/
 
 ## Known Bugs
 - N/A
@@ -21,6 +29,9 @@ By Adrianacmy
 - Solidity
 - LevelDB
 - Crypto-js
+- Experss.js
+- Sails.js
+- Hapi.js
 
 
 ## Glosary
@@ -77,3 +88,13 @@ nvm use v0.4.12 // user certain version
 ## Licence
 
 - MIT
+
+## Surpport Contents
+
+### [API Design (support contents)](RESTful_api/README.md)
+
+### Nodejs:
+- core components: http, fs
+- nvm: node version manager
+- npm
+- nodejs framework: https://nordicapis.com/13-node-js-frameworks-to-build-web-apis/
