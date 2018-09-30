@@ -4,7 +4,7 @@ Learn to identify fundamental transaction types, build a web service and API, an
 By Adrianacmy
 <br>
 
-## [Project1](./managingBlockchainIdentity.md): [Manage your blockchain identity using a bitcoin wallet.](./verifyMessageSignature.js)
+## [Project_1](./managingBlockchainIdentity.md): [Manage your blockchain identity using a bitcoin wallet.](./verifyMessageSignature.js)
 
 ## [Project_2](./Project_2/simpleChain.js) : Create a private blockchain ledger that persists data and validates the blockchain ledger utilizing block hashes.
 
