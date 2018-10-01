@@ -1,5 +1,6 @@
 
 # Projects for Blockchain Developer Nanodegree Term1
+
 Learn to identify fundamental transaction types, build a web service and API, and secure digital assets with your blockchain identity. Create a private blockchain, and a notarization web service. Use your blockchain identity to secure digital assets on the Ethereum platform with a smart contract.<br><br>
 By Adrianacmy
 <br>
@@ -8,19 +9,21 @@ By Adrianacmy
 
 ## [Project_2](./Project_2/simpleChain.js) : Create a private blockchain ledger that persists data and validates the blockchain ledger utilizing block hashes.
 
-##
+## [Glosary](./glosary.md)
 
 ## [Bitcoin-cli](./bitcoin-cli.md)
 
-## Blockchain relavent organizations
+## Organizations with great pitches
 
 - https://traseable.com/
 - https://new.consensys.net/: wetsite color solution is great
 - https://viant.io/
 
+
+## RPC: Remote precedure calls
+
 ## Known Bugs
 - N/A
-
 
 ## Technologies Used
 
@@ -33,27 +36,6 @@ By Adrianacmy
 - Sails.js
 - Hapi.js
 
-
-## Glosary
-
-- Proof of Work: Consensus algorithm that requires manual processing from the user.
-
-- Peer-to-peer network: A network of computers that allows information to be shared across users.
-
-- Signature: Establishes proof of ownership for each transaction on the blockchain.
-
-- Transaction: Record of any movement of funds that takes place on the network.
-
-- Mempool: Waiting place for all unconfirmed transactions before they are added to the blockchain.
-
-- Wallet: Software that stores private keys that give access to a bitcoin balance.
-
-- Best Block: Most recent block that you’ve synced to with your local copy of the blockchain.
-
-
-- Delegated Byzantine Fault Tolerance (dBFT)
-
-- A white paper is a guide that informs readers concisely about a complex issue and presents a thought on the matter. A white paper is meant to help readers understand an issue, solve a problem, or make a decision.
 
 ## Thanks
 
@@ -75,7 +57,9 @@ By Adrianacmy
 - http://leveldb.org/
 - https://scottiestech.info/2014/07/01/javascript-fun-looping-with-a-delay/
 
-
+- https://www.npmjs.com/package/bitcoin-core
+- https://www.npmjs.com/package/ethereumjs-util
+- https://www.npmjs.com/search?q=keywords:blockchain
 ```
 n ls // list all available node versions
 nvm install v0.4.12 // install certain version
