@@ -4,3 +4,4 @@ pytest_cache
 notes.md
 test.js
 chaindata
+ .pytest_cache
