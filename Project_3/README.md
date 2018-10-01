@@ -1,79 +1,82 @@
 # RESTful Web API with Express.js
 
-Build a RESTful API using a Experess.js that will interfaces with the private blockchain By configuring an API for the private blockchain you expose functionality that can be consumed by several types of web clients ranging from desktop, mobile, and IoT devices.
+## Why this project?
+
+This project introduces you to the fundamentals of web APIs with Node.js frameworks. Using your own private blockchain to create a web API is a huge first step toward developing your own web applications that are consumable by a variety of web clients. Later in this program, you’ll be programming blockchain technologies that utilize these similar features using smart contracts.
+
+## What will I learn?
+
+You will learn to create and manage a web API with a Node.js framework to interact with your private blockchain. You’ll get first hand experience generating API endpoints and configuring the endpoints response that can be consumable by many types of web clients. This project helps build on the skills you’ve learned so far an allow you to apply these skills using real world technologies to get hands on with the tools used to create web APIs.
+
+
+## How does this help my career?
+
+Understanding web APIs and ways to create them will help you build user applications later in the program.
 
 ## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-
-### Configuring
-
-- Use NPM to initialize your project and create package.json to store project dependencies.
 ```
-npm init
-```
-- Install crypto-js with --save flag to save dependency to our package.json file
-```
-npm install crypto-js --save
-```
-- Install level with --save flag
-```
-npm install level --save
+git clone ...
+cd Project_3
+npm install
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+## Running API
+```
+node index.js
 
 ```
-Give an example
+
+## Testing
+```
+ GET /block/{BLOCK_HEIGHT}
+ curl http://localhost:8000/block/0
+
+ POST /block
+ curl -X "POST" "http://localhost:8000/block" -H 'Content-Type: application/json' -d $'{"body":"some body"}'
+
+
+ [Or use Postman to test](https://www.getpostman.com/)
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+<!--
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
-
+- It is unnecessary to deploy this API -->
 ## Built With
+
+- Javascript
+- Nodejs
+- LevelDB
+- Crypto-js
+- Experss.js
+
+<!--
 
 * [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
 * [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds -->
 
-## Contributing
+<!-- ## Contributing -->
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
+<!-- Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. -->
+<!--
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). -->
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+- [Adrianacmy](http://adrianawritescode.com)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+<!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License
 
-## Acknowledgments
+<!-- ## Acknowledgments
 
 * Hat tip to anyone whose code was used
 * Inspiration
-* etc
+* etc -->

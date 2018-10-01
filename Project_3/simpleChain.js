@@ -121,18 +121,18 @@ class Blockchain {
     }
 }
 
-let blockchain = new Blockchain();
+// let blockchain = new Blockchain();
 
-(function theLoop(i) {
-    setTimeout(() => {
-        blockchain.addBlock(new Block(`Test data ${i}`)).then(() => {
-            if (--i) {
-                theLoop(i)
-            }
-        })
-    }, 500);
-})(10);
+// (function theLoop(i) {
+//     setTimeout(() => {
+//         blockchain.addBlock(new Block(`Test data ${i}`)).then(() => {
+//             if (--i) {
+//                 theLoop(i)
+//             }
+//         })
+//     }, 500);
+// })(10);
 
-setTimeout(() => blockchain.validateChain(), 2000)
+// setTimeout(() => blockchain.validateChain(), 2000)
 
 module.exports = Blockchain
