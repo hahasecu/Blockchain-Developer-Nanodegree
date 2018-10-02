@@ -5,9 +5,32 @@ Learn to identify fundamental transaction types, build a web service and API, an
 By Adrianacmy
 <br>
 
-## [Project_1](./managingBlockchainIdentity.md): [Manage your blockchain identity using a bitcoin wallet.](./verifyMessageSignature.js)
+## [Project_1](./Project_1.md): [Manage your blockchain identity using a bitcoin wallet.](./verifyMessageSignature.js)
 
-## [Project_2](./Project_2/simpleChain.js) : Create a private blockchain ledger that persists data and validates the blockchain ledger utilizing block hashes.
+## [Project_2](./Project_2/README.md) : Create a private blockchain ledger that persists data and validates the blockchain ledger utilizing block hashes.
+
+## [Project_3](./Project_3/README.md) : Create web service API with Express.js.
+
+
+## Digital Assets
+- ASCII(American Standard Code for Information Interchange): [ascii converter](https://www.branah.com/ascii-converter)
+- [ascii table](http://www.asciitable.com/)
+- hexadecimal: [converter](http://www.convertstring.com/EncodeDecode/HexEncode)
+- Base64:Encoding scheme meant to represent data as numbers in a string format
+```
+String to hex: xxd -p <<< "Blockchain Developer"
+Hex to string: echo 426c6f636b636861696e20446576656c6f7065720a|xxd -r -p
+String to Hex: xxd -p file.txt fileEncoded.txt
+Hex to String: xxd -p -r fileEncoded.txt fileDecoded.txt
+
+Image to Hex: xxd -p img.png img.txt
+Hex to Image: xxd -p -r img.txt imgDecoded.png
+```
+- [Proof of existence](http://poex.io/)
+    - http://originstamp.org/home
+    - https://www.factom.com/
+    - https://www.flo.cash/
+
 
 ## [Glosary](./glosary.md)
 
@@ -60,6 +83,7 @@ By Adrianacmy
 - https://www.npmjs.com/package/bitcoin-core
 - https://www.npmjs.com/package/ethereumjs-util
 - https://www.npmjs.com/search?q=keywords:blockchain
+- https://www.google.com/sky/
 ```
 n ls // list all available node versions
 nvm install v0.4.12 // install certain version

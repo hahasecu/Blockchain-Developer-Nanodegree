@@ -13,6 +13,16 @@ const BlockChain = require('./simpleChain')
 let blockchain = new BlockChain();
 
 
+let registerStar = {
+    "registerStar": "",
+    "status": {
+        "address": "",
+        "requestTimeStamp": "",
+        "message": "",
+        "validationWindow": 300
+    }
+}
+
 app.get('/block/:blockHeight', (req, res) => {
     let height = req.params.blockHeight;
 
@@ -28,39 +38,9 @@ app.get('/block/:blockHeight', (req, res) => {
 })
 
 
-app.post('/block', (req, res) => {
-    let postody = req.body;
-    if (!postody.body) {
-        res.status(400).json({
-            "status": 400,
-            "message": "Please enter data body"
-        })
-    } else {
-        blockchain.addBlock(new Block(postody.body))
-            .then(
-                async () => {
-                    const height = await blockchain.getBlockHeight()
-                    const response = await blockchain.getBlock(height)
-
-                    res.status(201).send(response);
-                }
-            ).catch(err => res.json({
-                "err": err
-            }))
-    }
-})
-
-
-let response = {
-    "address": "",
-    "requestTimeStamp": "",
-    "message": "",
-    "validationWindow": 300
-}
-
 app.post('/requestValidation', (req, res) => {
-    if (!response.requestTimeStamp) {
-        response.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
+    if (!registerStar.status.requestTimeStamp) {
+        registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
     }
 
     let walletAddress = req.body.address;
@@ -71,21 +51,20 @@ app.post('/requestValidation', (req, res) => {
             "message": "Please provide your wallet address"
         })
     } else {
-        response.address = walletAddress;
+        registerStar.status.address = walletAddress;
         let newTimeStamp = new Date().getTime().toString().slice(0, -3);
-        let timeDelta = newTimeStamp - response.requestTimeStamp;
+        let timeDelta = newTimeStamp - registerStar.status.requestTimeStamp;
 
         if (timeDelta >= 300) {
-            response.validationWindow = 300,
-                response.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
+            registerStar.status.validationWindow = 300,
+                registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
         } else {
-            response.validationWindow = 300 - timeDelta;
+            registerStar.status.validationWindow = 300 - timeDelta;
         }
-        response.message = `${response.address}:${response.requestTimeStamp}:starRegistry`
-        res.send(response);
+        registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
+        res.send(registerStar.status);
     }
 })
-
 
 
 app.post('/message-signature/validate', (req, res) => {
@@ -98,9 +77,9 @@ app.post('/message-signature/validate', (req, res) => {
             "message": "Please provide your wallet address"
         })
     } else {
-        let { address, requestTimeStamp, message, validationWindow, messageSignature } = response;
+        let { address, requestTimeStamp, message, validationWindow, messageSignature } = registerStar.status;
         let valid = bitcoinMessage.verify(message, address, signature);
-        response.messageSignature = valid ? 'valid' : invalid;
+        registerStar.status.messageSignature = valid ? 'valid' : 'invalid';
         res.status(200).json({
             "registerStar": valid ? true : false,
             "status": {
@@ -112,6 +91,85 @@ app.post('/message-signature/validate', (req, res) => {
             }
         })
     }
+})
+
+
+const hexEncode = (str) => {
+    let arr1 = [];
+    for (let n = 0, l = str.length; n < l; n++) {
+        let hex = Number(str.charCodeAt(n)).toString(16);
+        arr1.push(hex);
+    }
+    return arr1.join('');
+}
+
+const isASCII = (aStr) => {
+    return /^[\x00-\x7F]*$/.test(aStr);
+}
+
+const allString = lst => {
+    return lst.every(item => typeof item === 'string')
+}
+
+const validBody = body => {
+    let valid = true;
+    let { address, star } = body;
+    const { dec, ra, story, magnitude, constellation } = star;
+    let lst = [address, dec, ra, story]
+    // console.log(!address || !dec || !ra || !story || !allString(lst))
+    if (!address || !dec || !ra || !story || !allString(lst)) {
+        valid = false;
+        throw new Error('address, dec, ra, story are strings and required');
+    }
+    if (isASCII(story)) {
+        if (hexEncode(story).length > 500) {
+            valid = false;
+            throw new Error('Story is too long');
+        }
+    }
+    return valid;
+}
+
+app.post('/block', async (req, res) => {
+    if (registerStar.registerStar) {
+        if (validBody(req.body)) {
+            console.log(req.body.star.story)
+            hexStory = hexEncode(req.body.star.story)
+            const { address, star } = req.body;
+            const { dec, ra, story } = star;
+
+            newBody = {
+                "address": address,
+                "star": {
+                    "dec": dec,
+                    "ra": ra,
+                    "story": hexStory
+                }
+            }
+            const { magnitude, constellation } = req.body.star;
+            if (magnitude && allString([magnitude])) {
+                newBody.star.magnitude = magnitude;
+            }
+            if (constellation && allString([constellation])) {
+                newBody.star.constellation = constellation;
+            }
+            await blockchain.addBlock(new Block(newBody));
+            const height = await blockchain.getBlockHeight()
+            const response = await blockchain.getBlock(height)
+            registerStar.registerStar = false;
+            res.status(201).send(response);
+        } else {
+            res.json({
+                "message": "address, dec, ra, story are strings and required and story has to be within 250 words"
+            })
+        }
+
+    } else {
+        res.json({
+            "message": "Not allowed to register star, please verify yourself first."
+        })
+    }
+
 })
 
 
