@@ -58,6 +58,7 @@ let registerStar = {
     }
 }
 
+
 /***
  * look up star with block height
  * param:
@@ -79,6 +80,7 @@ app.get('/block/:blockHeight', async (req, res) => {
     }
 
 })
+
 
 /**
  * request Validation
@@ -104,7 +106,7 @@ app.post('/requestValidation', (req, res) => {
         let newTimeStamp = new Date().getTime().toString().slice(0, -3);
         let timeDelta = newTimeStamp - registerStar.status.requestTimeStamp;
 
-        if (timeDelta >= 300) {
+        if (timeDelta >= 300 || !registerStar.registerStar) {
             registerStar.status.validationWindow = 300,
                 registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
         } else {
@@ -206,6 +208,7 @@ app.post('/block', async (req, res) => {
     }
 
 })
+
 
 
 /**
