@@ -9,29 +9,29 @@ This project also helps set you up for success later in the program. Later, you�
 
 ### You’ll configure the blockchain to:
 
-Notarize ownership of a digital asset using message signatures and validation <br>
-Accept user requests using registration endpoints<br>
-Implement a mempool for the message queue <br>
-Allow search by blockchain wallet address or by specific attribute (e.g.star block hash, star block height) <br>
+- Notarize ownership of a digital asset using message signatures and validation <br>
+- Accept user requests using registration endpoints<br>
+- Implement a mempool for the message queue <br>
+- Allow search by blockchain wallet address or by specific attribute (e.g.star block hash, star block height) <br>
 
-
+<!--
 ## How does this help my career?
 
-In this project, you’ll demonstrate creating and working with web APIs that notarizes ownership of a digital asset using message signatures and validation. To do so, you’ll demonstrate your understanding of many core blockchain concepts such as encoding and decoding transaction data, configuring your blockchain to handle wallet identities, and configuring your blockchain to properly handle user requests.
+In this project, you’ll demonstrate creating and working with web APIs that notarizes ownership of a digital asset using message signatures and validation. To do so, you’ll demonstrate your understanding of many core blockchain concepts such as encoding and decoding transaction data, configuring your blockchain to handle wallet identities, and configuring your blockchain to properly handle user requests. -->
 
 ## User stories
-- Users will be able to notarize star ownership using their blockchain identity.
-- Your application will provide a message to your user allowing them to verify their wallet address with a message signature.
-- Once a user verifies their wallet address, they have the right to register the star.
-- Once registered, each star has the ability to share a story.
-- Users will be able to look up their star by hash, block height, or wallet address.
 
-- RA 13h 03m 33.35sec, Dec -49° 31’ 38.1” Mag 4.83 Cen
+- As a user, I can requst to validate my identity with a wallet address.
+- As a user，I can request access to register a star with wallet address and signature.
+- As a user, I can register a star if I verify my identity successfully.
+- As a user, I can look up stars with wallet address.
+- As a user, I can look up stars with hash.
+- As a user, I can look up stars with height.
 
 ## Getting Started
 ```
 git clone ...
-cd Project_3
+cd Project_4
 npm install
 ```
 
@@ -43,14 +43,43 @@ node index.js
 
 ## Testing
 ```
- GET /block/{BLOCK_HEIGHT}
- curl http://localhost:8000/block/0
+ POST /requestValidation
+ curl -X "POST" "http://localhost:8000/requestValidation" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ"
+}'
 
- POST /block
- curl -X "POST" "http://localhost:8000/block" -H 'Content-Type: application/json' -d $'{"body":"some body"}'
 
+ POST /message-signature/validate
+ curl -X "POST" "http://localhost:8000/message-signature/validate" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
+  "signature": "H6ZrGrF0Y4rMGBMRT2+hHWGbThTIyhBS0dNKQRov9Yg6GgXcHxtO9GJN4nwD2yNXpnXHTWU9i+qdw5vpsooryLU="
+}'
 
- [Or use Postman to test](https://www.getpostman.com/)
+POST /block
+curl -X "POST" "http://localhost:8000/block" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
+  "star": {
+    "dec": "-26° 29'\'' 24.9",
+    "ra": "16h 29m 1.0s",
+    "story": "Found star using https://www.google.com/sky/"
+  }
+}'
+
+GET /stars/address:[ADDRESS]
+curl "http://localhost:8000/stars/address:142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ"
+
+GET /stars/hash:[HASH]
+curl "http://localhost:8000/stars/hash:a59e9e399bc17c2db32a7a87379a8012f2c8e08dd661d7c0a6a4845d4f3ffb9f"
+
+GET /block/[HEIGHT]
+curl "http://localhost:8000/block/1"
+
 ```
 
 <!--
@@ -58,6 +87,8 @@ node index.js
 ## Deployment
 
 - It is unnecessary to deploy this API -->
+
+
 ## Built With
 
 - Javascript
@@ -65,6 +96,8 @@ node index.js
 - LevelDB
 - Crypto-js
 - Experss.js
+- bitcoinjs-message
+- body-parser
 
 <!--
 

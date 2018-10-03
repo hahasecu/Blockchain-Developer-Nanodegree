@@ -14,6 +14,7 @@ const hex_to_ascii = str1 => {
     return str;
 }
 
+
 class Blockchain {
     constructor() {
         this.getBlockHeightDB().then(height => {
@@ -22,7 +23,6 @@ class Blockchain {
             }
         })
     }
-
 
 
     async getBlockByAddress(address) {
