@@ -58,6 +58,13 @@ let registerStar = {
     }
 }
 
+/***
+ * look up star with block height
+ * param:
+ *     blockHeight: integer, required
+ * return a block in json
+ */
+
 app.get('/block/:blockHeight', async (req, res) => {
     let height = req.params.blockHeight;
 
@@ -73,7 +80,13 @@ app.get('/block/:blockHeight', async (req, res) => {
 
 })
 
-
+/**
+ * request Validation
+ * param:
+ *     walletAddress: string, required
+ * return address, requestTimeStamp, message, validationWindow
+ *
+ */
 app.post('/requestValidation', (req, res) => {
     if (!registerStar.status.requestTimeStamp) {
         registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
@@ -103,6 +116,13 @@ app.post('/requestValidation', (req, res) => {
 })
 
 
+/**
+ * verify identity
+ * params:
+ *      address: string, required
+ *      signature: string, required
+ * return registerStar, status
+ */
 app.post('/message-signature/validate', (req, res) => {
     let walletAddress = req.body.address;
     let signature = req.body.signature;
@@ -131,7 +151,19 @@ app.post('/message-signature/validate', (req, res) => {
 })
 
 
-
+/**
+ * register a new star when registerStar is true
+ * params:
+ *     address: string, required
+*      star: {
+            "dec": string, required,
+            "ra": string, required,
+            "story": Ascii string limited to 250 words/500 bytes, required,
+            "magnitude": string, optional,
+            "constellation": string, optional
+            }
+    return a new star block in json
+ */
 app.post('/block', async (req, res) => {
     console.log(registerStar)
     if (registerStar.registerStar) {
@@ -176,6 +208,13 @@ app.post('/block', async (req, res) => {
 })
 
 
+/**
+ * star look up
+ * params:
+ *     address: string, required
+ * ｒeturn a list of stars
+ */
+
 app.get('/stars/address:address', async (req, res) => {
     console.log(req.params);
     let address = req.params.address.slice(1);
@@ -193,6 +232,12 @@ app.get('/stars/address:address', async (req, res) => {
 })
 
 
+/**
+ * star look up
+ * params:
+ *     hash: string, required
+ * ｒeturn a star
+ */
 app.get('/stars/hash:hash', async (req, res) => {
     let hash = req.params.hash.slice(1);
     console.log(hash);
@@ -211,7 +256,6 @@ app.get('/stars/hash:hash', async (req, res) => {
 app.get('*', function (req, res) {
     res.status(404).send('Route Not Found');
 });
-
 
 
 app.listen(port, () => console.log(`API is listening on port ${port}!`))

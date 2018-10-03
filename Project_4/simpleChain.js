@@ -74,7 +74,6 @@ class Blockchain {
     async addBlock(newBlock) {
         const height = parseInt(await this.getBlockHeightDB());
         newBlock.height = height + 1;
-
         newBlock.time = new Date().getTime().toString().slice(0, -3);
 
         if (newBlock.height > 0) {
@@ -83,7 +82,6 @@ class Blockchain {
         }
 
         newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
-
         await this.addABlockDB(newBlock.height, JSON.stringify(newBlock))
     }
 
