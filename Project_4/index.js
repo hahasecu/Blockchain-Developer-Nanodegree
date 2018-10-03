@@ -12,6 +12,40 @@ const BlockChain = require('./simpleChain')
 
 let blockchain = new BlockChain();
 
+const hexEncode = (str) => {
+    let arr1 = [];
+    for (let n = 0, l = str.length; n < l; n++) {
+        let hex = Number(str.charCodeAt(n)).toString(16);
+        arr1.push(hex);
+    }
+    return arr1.join('');
+}
+
+const isASCII = (aStr) => {
+    return /^[\x00-\x7F]*$/.test(aStr);
+}
+
+const allString = lst => {
+    return lst.every(item => typeof item === 'string')
+}
+
+const validBody = body => {
+    let valid = true;
+    let { address, star } = body;
+    const { dec, ra, story, magnitude, constellation } = star;
+    let lst = [address, dec, ra, story]
+    if (!address || !dec || !ra || !story || !allString(lst)) {
+        valid = false;
+        throw new Error('address, dec, ra, story are strings and required');
+    }
+    if (isASCII(story)) {
+        if (hexEncode(story).length > 500) {
+            valid = false;
+            throw new Error('Story is too long');
+        }
+    }
+    return valid;
+}
 
 let registerStar = {
     "registerStar": "",
@@ -70,7 +104,7 @@ app.post('/requestValidation', (req, res) => {
 app.post('/message-signature/validate', (req, res) => {
     let walletAddress = req.body.address;
     let signature = req.body.signature;
-    console.log(walletAddress, signature);
+    // console.log(walletAddress, signature);
     if (!walletAddress || !signature) {
         res.status(400).json({
             "status": 400,
@@ -80,6 +114,7 @@ app.post('/message-signature/validate', (req, res) => {
         let { address, requestTimeStamp, message, validationWindow, messageSignature } = registerStar.status;
         let valid = bitcoinMessage.verify(message, address, signature);
         registerStar.status.messageSignature = valid ? 'valid' : 'invalid';
+        registerStar.registerStar = valid ? true : false;
         res.status(200).json({
             "registerStar": valid ? true : false,
             "status": {
@@ -94,43 +129,9 @@ app.post('/message-signature/validate', (req, res) => {
 })
 
 
-const hexEncode = (str) => {
-    let arr1 = [];
-    for (let n = 0, l = str.length; n < l; n++) {
-        let hex = Number(str.charCodeAt(n)).toString(16);
-        arr1.push(hex);
-    }
-    return arr1.join('');
-}
-
-const isASCII = (aStr) => {
-    return /^[\x00-\x7F]*$/.test(aStr);
-}
-
-const allString = lst => {
-    return lst.every(item => typeof item === 'string')
-}
-
-const validBody = body => {
-    let valid = true;
-    let { address, star } = body;
-    const { dec, ra, story, magnitude, constellation } = star;
-    let lst = [address, dec, ra, story]
-    // console.log(!address || !dec || !ra || !story || !allString(lst))
-    if (!address || !dec || !ra || !story || !allString(lst)) {
-        valid = false;
-        throw new Error('address, dec, ra, story are strings and required');
-    }
-    if (isASCII(story)) {
-        if (hexEncode(story).length > 500) {
-            valid = false;
-            throw new Error('Story is too long');
-        }
-    }
-    return valid;
-}
 
 app.post('/block', async (req, res) => {
+    console.log(registerStar)
     if (registerStar.registerStar) {
         if (validBody(req.body)) {
             console.log(req.body.star.story)
@@ -139,11 +140,11 @@ app.post('/block', async (req, res) => {
             const { dec, ra, story } = star;
 
             newBody = {
-                "address": address,
-                "star": {
-                    "dec": dec,
-                    "ra": ra,
-                    "story": hexStory
+                address: address,
+                star: {
+                    dec: dec,
+                    ra: ra,
+                    story: hexStory
                 }
             }
             const { magnitude, constellation } = req.body.star;
@@ -173,8 +174,40 @@ app.post('/block', async (req, res) => {
 })
 
 
+app.get('/stars/address:address', async (req, res) => {
+    console.log(req.params);
+    let address = req.params.address.slice(1);
+    // console.log(address)
+    if (!address) {
+        res.status(400).json({
+            "message": "Please provide your wallet address"
+        })
+    } else {
+        const response = await blockchain.getBlockByAddress(address);
+        // console.log(response);
+        res.send(response)
+    }
+
+})
+
+
+app.get('/stars/hash:hash', async (req, res) => {
+    let hash = req.params.hash.slice(1);
+    console.log(hash);
+    if (!hash) {
+        res.status(400).json({
+            "message": "Please provide hash"
+        })
+    } else {
+        const response = await blockchain.getBlockByHash(hash);
+        res.send(response)
+    }
+
+})
+
+
 app.get('*', function (req, res) {
-    res.status(404).send('Not Found');
+    res.status(404).send('Route Not Found');
 });
 
 

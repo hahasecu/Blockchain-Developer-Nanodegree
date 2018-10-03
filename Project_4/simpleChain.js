@@ -5,6 +5,14 @@ const db = level(chainDB)
 const Block = require('./block')
 
 
+const hex_to_ascii = str1 => {
+    var hex = str1.toString();
+    var str = '';
+    for (var n = 0; n < hex.length; n += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+}
 
 class Blockchain {
     constructor() {
@@ -12,6 +20,54 @@ class Blockchain {
             if (height === -1) {
                 this.addBlock(new Block("First block in the chain - Genesis block")).then(() => console.log('added the first block'))
             }
+        })
+    }
+
+
+
+    async getBlockByAddress(address) {
+        let blocks = [];
+        let block;
+        return new Promise((resolve, reject) => {
+            db.createReadStream()
+                .on('data', function (data) {
+                if (parseInt(data.key) !== 0) {
+                    block = JSON.parse(data.value)
+
+                    if (block.body.address === address) {
+                        block.body.star.story = hex_to_ascii(block.body.star.story);
+                        blocks.push(JSON.stringify(block))
+                    }
+                  }
+                }).on('error', (error) => {
+                  reject(error)
+                }).on('close', () => {
+                  resolve(blocks)
+                })
+        })
+
+    }
+
+    async getBlockByHash(hash) {
+        let block;
+        return new Promise((resolve, reject) => {
+            db.createReadStream()
+                .on('data', function (data) {
+                    block = JSON.parse(data.value);
+                    if (block.hash === hash) {
+                        // console.log(block)
+                        if(parseInt(data.key) === 0){
+                            return resolve(block);
+                        }else{
+                            block.body.star.story = hex_to_ascii(block.body.star.story);
+                            return resolve(block);
+                        }
+                    }
+                }).on('error', (error) => {
+                  return reject(error)
+                }).on('close', () => {
+                  return resolve(block)
+                })
         })
     }
 
@@ -38,7 +94,12 @@ class Blockchain {
 
 
     async getBlock(blockHieght) {
-        return JSON.parse(await this.getABlockByKeyDB(blockHieght));
+        let block = JSON.parse(await this.getABlockByKeyDB(blockHieght));
+        if (parseInt(blockHieght) !== 0){
+            block.body.star.story = hex_to_ascii(block.body.star.story);
+        }
+        return block;
+
     }
 
 
