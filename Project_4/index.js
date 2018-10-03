@@ -10,7 +10,6 @@ const port = 8000
 const Block = require('./block')
 const BlockChain = require('./simpleChain')
 
-let blockchain = new BlockChain();
 
 const hexEncode = (str) => {
     let arr1 = [];
@@ -47,6 +46,8 @@ const validBody = body => {
     return valid;
 }
 
+let blockchain = new BlockChain();
+
 let registerStar = {
     "registerStar": "",
     "status": {
@@ -57,18 +58,19 @@ let registerStar = {
     }
 }
 
-app.get('/block/:blockHeight', (req, res) => {
+app.get('/block/:blockHeight', async (req, res) => {
     let height = req.params.blockHeight;
 
-    blockchain.getBlock(height)
-        .then(response =>
-            res.send(response))
-        .catch(err => {
-            res.status(404).json({
-                "status": 404,
-                "message": "Block not found"
-            })
+    try {
+        const response = await blockchain.getBlock(height)
+        res.send(response);
+    }catch (err){
+        res.status(404).json({
+            "status": 404,
+            "message": "Block not found"
         })
+    }
+
 })
 
 
