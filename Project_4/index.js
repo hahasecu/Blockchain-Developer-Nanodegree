@@ -18,15 +18,15 @@ const hexEncode = (str) => {
         arr1.push(hex);
     }
     return arr1.join('');
-}
+};
 
 const isASCII = (aStr) => {
     return /^[\x00-\x7F]*$/.test(aStr);
-}
+};
 
 const allString = lst => {
     return lst.every(item => typeof item === 'string')
-}
+};
 
 const validBody = body => {
     let valid = true;
@@ -44,17 +44,17 @@ const validBody = body => {
         }
     }
     return valid;
-}
+};
 
 let blockchain = new BlockChain();
 
 let registerStar = {
-    "registerStar": "",
-    "status": {
-        "address": "",
-        "requestTimeStamp": "",
-        "message": "",
-        "validationWindow": 300
+    registerStar: "",
+    status: {
+        address: "",
+        requestTimeStamp: "",
+        message: "",
+        validationWindow: 300
     }
 }
 
@@ -104,11 +104,13 @@ app.post('/requestValidation', (req, res) => {
     } else {
         registerStar.status.address = walletAddress;
         let newTimeStamp = new Date().getTime().toString().slice(0, -3);
-        let timeDelta = newTimeStamp - registerStar.status.requestTimeStamp;
+        let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
+        console.log(timeDelta);
+        console.log()
 
-        if (timeDelta >= 300 || !registerStar.registerStar) {
+        if (timeDelta >= 300) {
             registerStar.status.validationWindow = 300,
-                registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
+            registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
         } else {
             registerStar.status.validationWindow = 300 - timeDelta;
         }
@@ -208,7 +210,6 @@ app.post('/block', async (req, res) => {
     }
 
 })
-
 
 
 /**
