@@ -36,7 +36,7 @@ class Blockchain {
 
                     if (block.body.address === address) {
                         block.body.star.story = hex_to_ascii(block.body.star.story);
-                        blocks.push(JSON.stringify(block))
+                        blocks.push(block)
                     }
                   }
                 }).on('error', (error) => {
