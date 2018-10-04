@@ -30,20 +30,21 @@ const allString = lst => {
 
 const validBody = body => {
     let valid = true;
+    let message = '';
     let { address, star } = body;
     const { dec, ra, story, magnitude, constellation } = star;
     let lst = [address, dec, ra, story]
     if (!address || !dec || !ra || !story || !allString(lst)) {
         valid = false;
-        return 'address, dec, ra, story are strings and required';
+        message = 'address, dec, ra, story must be strings and all of them are required';
     }
     if (isASCII(story)) {
         if (hexEncode(story).length > 500) {
             valid = false;
-            return 'Story is too long';
+            message = 'Story is too long';
         }
     }
-    return valid;
+    return [valid, message];
 };
 
 let blockchain = new BlockChain();
@@ -179,7 +180,8 @@ app.post('/message-signature/validate', (req, res) => {
 app.post('/block', async (req, res) => {
     console.log(registerStar)
     if (registerStar.registerStar) {
-        if (validBody(req.body)) {
+        let re = validBody(req.body);
+        if (re[0]) {
             // console.log(req.body.star.story);
             hexStory = hexEncode(req.body.star.story);
             const { address, star } = req.body;
@@ -206,9 +208,7 @@ app.post('/block', async (req, res) => {
             registerStar.registerStar = false;
             res.status(201).send(response);
         } else {
-            res.json({
-                "message": "address, dec, ra, story are strings and required and story has to be within 250 words"
-            })
+            res.send(re[1]);
         }
 
     } else {
