@@ -91,10 +91,9 @@ app.get('/block/:blockHeight', async (req, res) => {
  *
  */
 app.post('/requestValidation', (req, res) => {
-    if (!registerStar.status.requestTimeStamp) {
+        if (!registerStar.status.requestTimeStamp) {
         registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
     }
-
     let walletAddress = req.body.address;
 
     if (!walletAddress) {
@@ -103,7 +102,6 @@ app.post('/requestValidation', (req, res) => {
             "message": "Please provide your wallet address"
         })
     } else {
-
         if (walletAddress !== registerStar.status.address) {
             registerStar.status.address = walletAddress;
             registerStar.registerStar = '';
@@ -121,14 +119,6 @@ app.post('/requestValidation', (req, res) => {
                 registerStar.status.validationWindow = 300 - timeDelta;
             }
         }
-
-        // if (registerStar.registerStar === 'expired'){
-        //     res.json({"message": "validatiaon window expires, please start over"});
-        // }else{
-        //     registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
-        //     res.send(registerStar.status);
-        // }
-
         registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
         res.send(registerStar.status);
     }
@@ -156,7 +146,7 @@ app.post('/message-signature/validate', (req, res) => {
 
         let newTimeStamp = new Date().getTime().toString().slice(0, -3);
         let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
-        registerStar.status.validationWindow = 300 - timeDelta > 0 ? 300 - timeDelta : 0;
+        let timeLeft = 300 - timeDelta > 0 ? 300 - timeDelta : 0;
 
         if (valid){
             registerStar.registerStar = true;
@@ -166,7 +156,7 @@ app.post('/message-signature/validate', (req, res) => {
                     "address": address,
                     "requestTimeStamp": requestTimeStamp,
                     "message": message,
-                    "validationWindow": registerStar.status.validationWindow,
+                    "validationWindow": timeLeft > 0 ? timeLeft : 0,
                     "messageSignature": 'valid'
                 }
             })
@@ -182,7 +172,7 @@ app.post('/message-signature/validate', (req, res) => {
                         "address": address,
                         "requestTimeStamp": requestTimeStamp,
                         "message": message,
-                        "validationWindow": registerStar.status.validationWindow,
+                        "validationWindow": timeLeft > 0 ? timeLeft : 0,
                         "messageSignature": 'invalid'
                     }
                 })
@@ -256,9 +246,7 @@ app.post('/block', async (req, res) => {
  */
 
 app.get('/stars/address:address', async (req, res) => {
-    console.log(req.params);
     let address = req.params.address.slice(1);
-    // console.log(address)
     if (!address) {
         res.status(400).json({
             "message": "Please provide your wallet address"
@@ -287,7 +275,7 @@ app.get('/stars/hash:hash', async (req, res) => {
         })
     } else {
         const response = await blockchain.getBlockByHash(hash);
-        res.send(response)
+        res.send(response);
     }
 
 })

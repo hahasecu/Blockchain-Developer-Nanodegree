@@ -37,7 +37,6 @@ class Blockchain {
                         if (block.body.address === address) {
                             // block.body.star.story = hex_to_ascii(block.body.star.story);
                             block.body.star.storyDecoded = hex_to_ascii(block.body.star.story);
-
                             blocks.push(block)
                         }
                     }
@@ -57,20 +56,17 @@ class Blockchain {
                 .on('data', function (data) {
                     block = JSON.parse(data.value);
                     if (block.hash === hash) {
-                        // console.log(block)
-                        if (parseInt(data.key) === 0) {
-                            return resolve(block);
-                        } else {
-                            // block.body.star.story = hex_to_ascii(block.body.star.story);
+                        if (parseInt(data.key) !== 0) {
                             block.body.star.storyDecoded = hex_to_ascii(block.body.star.story);
-
-                            return resolve(block);
+                            resolve(block);
+                        } else {
+                            resolve(block);
                         }
                     }
                 }).on('error', (error) => {
-                    return reject(error)
+                    reject(error);
                 }).on('close', () => {
-                    return resolve(block)
+                    resolve('Block not found');
                 })
         })
     }

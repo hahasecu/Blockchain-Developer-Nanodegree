@@ -77,6 +77,10 @@ curl "http://localhost:8000/stars/address:142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ"
 GET /stars/hash:[HASH]
 curl "http://localhost:8000/stars/hash:a59e9e399bc17c2db32a7a87379a8012f2c8e08dd661d7c0a6a4845d4f3ffb9f"
 
+curl "http://localhost:8000/stars/hash:491db0947b549c60bcb71efc74ec2a1130e265c9386c69fe81e297a3c2cff48d"
+
+491db0947b549c60bcb71efc74ec2a1130e265c9386c69fe81e297a3c2cff48d
+
 GET /block/[HEIGHT]
 curl "http://localhost:8000/block/1"
 
