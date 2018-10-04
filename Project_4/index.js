@@ -91,7 +91,7 @@ app.get('/block/:blockHeight', async (req, res) => {
  *
  */
 app.post('/requestValidation', (req, res) => {
-        if (!registerStar.status.requestTimeStamp) {
+    if (!registerStar.status.requestTimeStamp) {
         registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
     }
     let walletAddress = req.body.address;
@@ -113,7 +113,7 @@ app.post('/requestValidation', (req, res) => {
 
             if (timeDelta >= 300) {
                 registerStar.status.validationWindow = 300,
-                registerStar.status.requestTimeStamp = '';
+                    registerStar.status.requestTimeStamp = '';
 
             } else {
                 registerStar.status.validationWindow = 300 - timeDelta;
@@ -141,31 +141,16 @@ app.post('/message-signature/validate', (req, res) => {
             "message": "Please provide your wallet address and signature"
         })
     } else {
-        let { address, requestTimeStamp, message} = registerStar.status;
-        let valid = bitcoinMessage.verify(message, address, signature);
+        if (registerStar.status.address === walletAddress) {
+            let { address, requestTimeStamp, message } = registerStar.status;
+            let valid = bitcoinMessage.verify(message, address, signature);
 
-        let newTimeStamp = new Date().getTime().toString().slice(0, -3);
-        let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
-        let timeLeft = 300 - timeDelta > 0 ? 300 - timeDelta : 0;
+            let newTimeStamp = new Date().getTime().toString().slice(0, -3);
+            let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
+            let timeLeft = 300 - timeDelta > 0 ? 300 - timeDelta : 0;
 
-        if (valid){
-            registerStar.registerStar = true;
-            res.status(200).json({
-                "registerStar": registerStar.registerStar,
-                "status": {
-                    "address": address,
-                    "requestTimeStamp": requestTimeStamp,
-                    "message": message,
-                    "validationWindow": timeLeft > 0 ? timeLeft : 0,
-                    "messageSignature": 'valid'
-                }
-            })
-        }else{
-            registerStar.registerStar = false;
-
-            if (registerStar.status.validationWindow = 0){
-                res.json({"message": "validation window expired"});
-            }else{
+            if (valid) {
+                registerStar.registerStar = true;
                 res.status(200).json({
                     "registerStar": registerStar.registerStar,
                     "status": {
@@ -173,10 +158,32 @@ app.post('/message-signature/validate', (req, res) => {
                         "requestTimeStamp": requestTimeStamp,
                         "message": message,
                         "validationWindow": timeLeft > 0 ? timeLeft : 0,
-                        "messageSignature": 'invalid'
+                        "messageSignature": 'valid'
                     }
                 })
+            } else {
+                registerStar.registerStar = false;
+
+                if (registerStar.status.validationWindow = 0) {
+                    res.json({ "message": "validation window expired" });
+                } else {
+                    res.status(200).json({
+                        "registerStar": registerStar.registerStar,
+                        "status": {
+                            "address": address,
+                            "requestTimeStamp": requestTimeStamp,
+                            "message": message,
+                            "validationWindow": timeLeft > 0 ? timeLeft : 0,
+                            "messageSignature": 'invalid'
+                        }
+                    })
+                }
             }
+
+        } else {
+            res.json({
+                "message": "Please use current address request validation first"
+            })
         }
     }
 })
@@ -231,7 +238,7 @@ app.post('/block', async (req, res) => {
 
     } else {
         res.json({
-            "message": "Not allowed to register star, please verify yourself first."
+            "message": "Not allowed to register star, please verify yourself."
         })
     }
 
