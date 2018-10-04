@@ -31,18 +31,20 @@ class Blockchain {
         return new Promise((resolve, reject) => {
             db.createReadStream()
                 .on('data', function (data) {
-                if (parseInt(data.key) !== 0) {
-                    block = JSON.parse(data.value)
+                    if (parseInt(data.key) !== 0) {
+                        block = JSON.parse(data.value)
 
-                    if (block.body.address === address) {
-                        block.body.star.story = hex_to_ascii(block.body.star.story);
-                        blocks.push(block)
+                        if (block.body.address === address) {
+                            // block.body.star.story = hex_to_ascii(block.body.star.story);
+                            block.body.star.storyDecoded = hex_to_ascii(block.body.star.story);
+
+                            blocks.push(block)
+                        }
                     }
-                  }
                 }).on('error', (error) => {
-                  reject(error)
+                    reject(error)
                 }).on('close', () => {
-                  resolve(blocks)
+                    resolve(blocks)
                 })
         })
 
@@ -56,17 +58,19 @@ class Blockchain {
                     block = JSON.parse(data.value);
                     if (block.hash === hash) {
                         // console.log(block)
-                        if(parseInt(data.key) === 0){
+                        if (parseInt(data.key) === 0) {
                             return resolve(block);
-                        }else{
-                            block.body.star.story = hex_to_ascii(block.body.star.story);
+                        } else {
+                            // block.body.star.story = hex_to_ascii(block.body.star.story);
+                            block.body.star.storyDecoded = hex_to_ascii(block.body.star.story);
+
                             return resolve(block);
                         }
                     }
                 }).on('error', (error) => {
-                  return reject(error)
+                    return reject(error)
                 }).on('close', () => {
-                  return resolve(block)
+                    return resolve(block)
                 })
         })
     }
@@ -93,7 +97,7 @@ class Blockchain {
 
     async getBlock(blockHieght) {
         let block = JSON.parse(await this.getABlockByKeyDB(blockHieght));
-        if (parseInt(blockHieght) !== 0){
+        if (parseInt(blockHieght) !== 0) {
             block.body.star.storyDecoded = hex_to_ascii(block.body.star.story);
         }
         return block;

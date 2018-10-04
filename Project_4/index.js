@@ -50,7 +50,7 @@ const validBody = body => {
 let blockchain = new BlockChain();
 
 let registerStar = {
-    registerStar: "",
+    registerStar: false,
     status: {
         address: "",
         requestTimeStamp: "",
@@ -114,17 +114,23 @@ app.post('/requestValidation', (req, res) => {
             let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
 
             if (timeDelta >= 300) {
-                registerStar.registerStar = 'expired';
+                registerStar.status.validationWindow = 300,
+                registerStar.status.requestTimeStamp = '';
+
             } else {
                 registerStar.status.validationWindow = 300 - timeDelta;
             }
         }
-        if (registerStar.registerStar === 'expired'){
-            res.json({"message": "validatiaon window expires"});
-        }else{
-            registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
-            res.send(registerStar.status);
-        }
+
+        // if (registerStar.registerStar === 'expired'){
+        //     res.json({"message": "validatiaon window expires, please start over"});
+        // }else{
+        //     registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
+        //     res.send(registerStar.status);
+        // }
+
+        registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
+        res.send(registerStar.status);
     }
 })
 
@@ -139,27 +145,49 @@ app.post('/requestValidation', (req, res) => {
 app.post('/message-signature/validate', (req, res) => {
     let walletAddress = req.body.address;
     let signature = req.body.signature;
-    // console.log(walletAddress, signature);
     if (!walletAddress || !signature) {
         res.status(400).json({
             "status": 400,
-            "message": "Please provide your wallet address"
+            "message": "Please provide your wallet address and signature"
         })
     } else {
-        let { address, requestTimeStamp, message, validationWindow, messageSignature } = registerStar.status;
+        let { address, requestTimeStamp, message} = registerStar.status;
         let valid = bitcoinMessage.verify(message, address, signature);
-        registerStar.status.messageSignature = valid ? 'valid' : 'invalid';
-        registerStar.registerStar = valid ? true : false;
-        res.status(200).json({
-            "registerStar": valid ? true : false,
-            "status": {
-                "address": address,
-                "requestTimeStamp": requestTimeStamp,
-                "message": message,
-                "validationWindow": validationWindow,
-                "messageSignature": messageSignature
+
+        let newTimeStamp = new Date().getTime().toString().slice(0, -3);
+        let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
+        registerStar.status.validationWindow = 300 - timeDelta > 0 ? 300 - timeDelta : 0;
+
+        if (valid){
+            registerStar.registerStar = true;
+            res.status(200).json({
+                "registerStar": registerStar.registerStar,
+                "status": {
+                    "address": address,
+                    "requestTimeStamp": requestTimeStamp,
+                    "message": message,
+                    "validationWindow": registerStar.status.validationWindow,
+                    "messageSignature": 'valid'
+                }
+            })
+        }else{
+            registerStar.registerStar = false;
+
+            if (registerStar.status.validationWindow = 0){
+                res.json({"message": "validation window expired"});
+            }else{
+                res.status(200).json({
+                    "registerStar": registerStar.registerStar,
+                    "status": {
+                        "address": address,
+                        "requestTimeStamp": requestTimeStamp,
+                        "message": message,
+                        "validationWindow": registerStar.status.validationWindow,
+                        "messageSignature": 'invalid'
+                    }
+                })
             }
-        })
+        }
     }
 })
 
