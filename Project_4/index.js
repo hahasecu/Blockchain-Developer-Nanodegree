@@ -35,12 +35,12 @@ const validBody = body => {
     let lst = [address, dec, ra, story]
     if (!address || !dec || !ra || !story || !allString(lst)) {
         valid = false;
-        throw new Error('address, dec, ra, story are strings and required');
+        return 'address, dec, ra, story are strings and required';
     }
     if (isASCII(story)) {
         if (hexEncode(story).length > 500) {
             valid = false;
-            throw new Error('Story is too long');
+            return 'Story is too long';
         }
     }
     return valid;
@@ -72,7 +72,7 @@ app.get('/block/:blockHeight', async (req, res) => {
     try {
         const response = await blockchain.getBlock(height)
         res.send(response);
-    }catch (err){
+    } catch (err) {
         res.status(404).json({
             "status": 404,
             "message": "Block not found"
@@ -102,20 +102,28 @@ app.post('/requestValidation', (req, res) => {
             "message": "Please provide your wallet address"
         })
     } else {
-        registerStar.status.address = walletAddress;
-        let newTimeStamp = new Date().getTime().toString().slice(0, -3);
-        let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
-        console.log(timeDelta);
-        console.log()
 
-        if (timeDelta >= 300) {
-            registerStar.status.validationWindow = 300,
+        if (walletAddress !== registerStar.status.address) {
+            registerStar.status.address = walletAddress;
+            registerStar.registerStar = '';
+            registerStar.status.validationWindow = 300;
             registerStar.status.requestTimeStamp = new Date().getTime().toString().slice(0, -3);
         } else {
-            registerStar.status.validationWindow = 300 - timeDelta;
+            let newTimeStamp = new Date().getTime().toString().slice(0, -3);
+            let timeDelta = parseInt(newTimeStamp) - parseInt(registerStar.status.requestTimeStamp);
+
+            if (timeDelta >= 300) {
+                registerStar.registerStar = 'expired';
+            } else {
+                registerStar.status.validationWindow = 300 - timeDelta;
+            }
         }
-        registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
-        res.send(registerStar.status);
+        if (registerStar.registerStar === 'expired'){
+            res.json({"message": "validatiaon window expires"});
+        }else{
+            registerStar.status.message = `${registerStar.status.address}:${registerStar.status.requestTimeStamp}:starRegistry`
+            res.send(registerStar.status);
+        }
     }
 })
 
@@ -172,8 +180,8 @@ app.post('/block', async (req, res) => {
     console.log(registerStar)
     if (registerStar.registerStar) {
         if (validBody(req.body)) {
-            console.log(req.body.star.story)
-            hexStory = hexEncode(req.body.star.story)
+            // console.log(req.body.star.story);
+            hexStory = hexEncode(req.body.star.story);
             const { address, star } = req.body;
             const { dec, ra, story } = star;
 

@@ -94,7 +94,7 @@ class Blockchain {
     async getBlock(blockHieght) {
         let block = JSON.parse(await this.getABlockByKeyDB(blockHieght));
         if (parseInt(blockHieght) !== 0){
-            block.body.star.story = hex_to_ascii(block.body.star.story);
+            block.body.star.storyDecoded = hex_to_ascii(block.body.star.story);
         }
         return block;
 
