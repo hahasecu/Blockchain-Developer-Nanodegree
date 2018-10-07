@@ -1,4 +1,5 @@
 # Build a Private Blockchain Notary Service
+[Project Rubric](https://review.udacity.com/#!/rubrics/2098/view)
 
 ## Why this project?
 Connecting a web API to a private blockchain is a huge first step toward developing web applications that are consumable by other of web clients. This is an important way to reach users with your blockchain applications and is a core skill of any blockchain developer. Including to notarize digital assets using wallet signatures and message verification in code is a huge step to be able to implement production ready applications.<br><br>
