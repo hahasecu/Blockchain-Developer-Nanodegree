@@ -151,6 +151,7 @@ app.post('/message-signature/validate', (req, res) => {
 
             if (valid) {
                 registerStar.registerStar = true;
+
                 res.status(200).json({
                     "registerStar": registerStar.registerStar,
                     "status": {
@@ -203,8 +204,8 @@ app.post('/message-signature/validate', (req, res) => {
     return a new star block in json
  */
 app.post('/block', async (req, res) => {
-    console.log(registerStar)
-    if (registerStar.registerStar) {
+    // console.log(registerStar)
+    if (registerStar.registerStar && req.body.address === registerStar.status.address) {
         let re = validBody(req.body);
         if (re[0]) {
             // console.log(req.body.star.story);
