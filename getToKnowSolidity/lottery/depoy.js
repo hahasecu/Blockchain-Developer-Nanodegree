@@ -4,8 +4,8 @@ const { interface, bytecode } = require('./compile');
 
 // a mnemonic could generat mutiple address
 const provider = new HDwalletProvider(
-    'yoru mnemonic',
-    'your endpoint'
+    'direct nuclear broken speed short oppose step water divide illness fortune bicycle',
+    'https://rinkeby.infura.io/v3/4d94e36f580841ad825b443f32c797cb'
 );
 
 const web3 = new Web3(provider);
@@ -15,7 +15,7 @@ const deploy = async () => {
     const accounts = await web3.eth.getAccounts();
     console.log(accounts);
     const result = await new web3.eth.Contract(JSON.parse(interface))
-    .deploy({data: bytecode, arguments: ['Hi']})
+    .deploy({data: bytecode})
     .send({from: accounts[0], gas: '10000000'});
 
     console.log(result.options.address);

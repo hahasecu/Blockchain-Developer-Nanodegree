@@ -43,7 +43,7 @@ describe("inbox", () => {
     it('can change the message', async () => {
         // send a transaction to a function will get a hash back
         await inbox.methods.setMessage('World').send({
-            from: accounts[0]
+            from: accounts[0], 
         });
 
         const newMessage = await inbox.methods.message().call();

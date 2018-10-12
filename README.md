@@ -182,6 +182,9 @@ nvm use v0.4.12 // user certain version
 
 ### [API Design](RESTful_api/README.md)
 
+## [Support Project](getToKnowSolidity)
+
+
 ### Nodejs:
 - core components: http, fs
 - nvm: node version manager
@@ -199,8 +202,3 @@ uint[] dynamicArray;
 
 Person[] people;
 ```
-
-old: 0xca089f8e0ed91b15c146f3d9135c7026789214f0
-current add: 0x5ee292F9E1923E2856eA211204F63E65C5a4587B
-
-current seed: direct nuclear broken speed short oppose step water divide illness fortune bicycle
