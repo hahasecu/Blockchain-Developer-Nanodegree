@@ -18,3 +18,4 @@ contract Inbox {
     //     return message;
     // }
 }
+
