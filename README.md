@@ -34,7 +34,82 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
     - https://www.flo.cash/
 
 
-## [Glosary](./glosary.md)
+## Ethereum
+- Generating Keys in Ethereum
+```
+    <!-- Generate Private Key -->
+    openssl ecparam -name secp256k1 -genkey -noout
+
+    <!-- Generate a random Private Key & Derive a Public Key -->
+    openssl ecparam -name secp256k1 -genkey -noout | openssl ec -text -noout > Key
+
+    <!-- Generate the hash, and save to a file 'address' -->
+    cat pub | keccak-256sum -x -l | tr -d ' -' | tail -c 41 > address
+
+
+```
+- Ethereum command line interface
+    - install Geth: https://ethereum.github.io/go-ethereum/install/
+    - Sync to the Rinkeby Test Network: `geth --rinkeby --syncmode "fast"`
+- Get test ether:
+    - https://faucet.metamask.io/
+    - https://www.rinkeby.io/#faucet
+
+- local test/dev environment Truffle: https://truffleframework.com/docs/ganache/quickstart
+```
+    npm install -g ganache-cli
+    sudo npm install -g ganache-cli truffle
+
+    <!-- Run Ganache CLI -->
+    ganache-cli
+
+
+    <!-- Stop Ganache and modify your Ganache command line statement to include --mnemonic "string of words". -->
+    ganache-cli --mnemonic 'trick core barely fold sample icon display hollow smoke task emotion pepper'
+
+    <!-- Compile smart contracts -->
+    truffle compile
+
+    <!-- Deploy smart contract -->
+    <!-- Make sure to configure your network settings. Modify truffle.js file (or truffle-config.js for windows), example below: -->
+    module.exports = {
+    // See <http://truffleframework.com/docs/advanced/configuration>
+    // to customize your Truffle configuration!
+    networks: {
+        development: {
+        host: "localhost",
+        port: 8545,
+        network_id: "*" // Match any network id
+        }
+    }
+    };
+
+    <!-- Run the following command to start the migrations scripts and deploy your smart contracts: -->
+    truffle migrate
+
+```
+
+- http-server: https://www.npmjs.com/package/http-server
+```
+ npm install http-server -g
+
+ http-server [path] [options]
+<!-- [path] defaults to ./public if the folder exists, and ./ otherwise. -->
+
+```
+- Ether Wei converter: https://www.myetherwallet.com/helpers.html
+- OpenZeppelin: https://github.com/OpenZeppelin/openzeppelin-solidity
+- Infura: https://infura.io/
+
+
+### Resources
+    - https://ethstats.net/
+    - https://github.com/ethereum/wiki/wiki/Glossary
+
+
+## RPC: Remote precedure calls
+
+## [Bitcoin Glosary](./glosary.md)
 
 ## [Bitcoin-cli](./bitcoin-cli.md)
 
@@ -43,9 +118,12 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
 - https://traseable.com/
 - https://new.consensys.net/: wetsite color solution is great
 - https://viant.io/
+- https://www.originprotocol.com/en#
+- https://bloom.co/
+- https://dharma.io/
+- https://www.cryptokitties.co/
+- https://www.nytimes.com/2018/05/18/style/cryptokitty-auction.html
 
-
-## RPC: Remote precedure calls
 
 ## Known Bugs
 - N/A
@@ -62,7 +140,7 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
 - Hapi.js
 
 
-## Thanks
+## Thanks/Resources
 
 - [Generate a bitcoin address]( https://www.bitaddress.org/bitaddress.org-v3.3.0-SHA256-dec17c07685e1870960903d8f58090475b25af946fe95a734f88408cef4aa194.html)
 - [Sharing images](https://imgbb.com/)
@@ -86,7 +164,7 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
 - https://www.npmjs.com/package/ethereumjs-util
 - https://www.npmjs.com/search?q=keywords:blockchain
 - https://www.google.com/sky/
-
+- [12 words mnomic](https://iancoleman.io/bip39/)
 ```
 n ls // list all available node versions
 nvm install v0.4.12 // install certain version
@@ -102,10 +180,22 @@ nvm use v0.4.12 // user certain version
 
 ## Surpport Contents
 
-### [API Design (support contents)](RESTful_api/README.md)
+### [API Design](RESTful_api/README.md)
 
 ### Nodejs:
 - core components: http, fs
 - nvm: node version manager
 - npm
 - nodejs framework: https://nordicapis.com/13-node-js-frameworks-to-build-web-apis/
+
+### Solidity
+```
+// 固定长度为2的静态数组:
+uint[2] fixedArray;
+// 固定长度为5的string类型的静态数组:
+string[5] stringArray;
+// 动态数组，长度不固定，可以动态添加元素:
+uint[] dynamicArray;
+
+Person[] people;
+```
