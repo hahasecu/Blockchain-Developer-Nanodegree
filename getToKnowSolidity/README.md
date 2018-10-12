@@ -38,4 +38,10 @@ npm install --save solc: sol compiler
 web3 versioning
 v0.x.x: primitive interface-only callbacks for async code
 v1.x.x: support for promises, async/await
+
+Mocha functions
+function:
+    it:
+    describe:
+    beforeEach:
 -->
