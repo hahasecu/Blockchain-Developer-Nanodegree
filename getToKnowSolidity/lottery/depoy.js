@@ -10,6 +10,7 @@ const provider = new HDwalletProvider(
 );
 
 const web3 = new Web3(ganache.provider());
+// const web3 = new Web3(provider);
 
 //can not use async await outside of a function
 const deploy = async () => {
