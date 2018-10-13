@@ -5,6 +5,7 @@ const { interface, bytecode } = require('./compile');
 // a mnemonic could generat mutiple address
 const provider = new HDwalletProvider(
     'direct nuclear broken speed short oppose step water divide illness fortune bicycle',
+    // 'direct nuclear broken speed short oppose step water divide illness fortune bicycle'
     'https://rinkeby.infura.io/v3/4d94e36f580841ad825b443f32c797cb'
 );
 
