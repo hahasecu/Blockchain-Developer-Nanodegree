@@ -22,7 +22,7 @@ const deploy = async () => {
     console.log(accounts);
     const result = await new web3.eth.Contract(JSON.parse(comipledFactory.interface))
         .deploy({ data: comipledFactory.bytecode })
-        .send({ from: accounts[0], gas: '1000000' });
+        .send({ from: accounts[0], gas: web3.utils.toHex('6000000')});
 
     // console.log(comipledFactory.interface)
     console.log(result.options.address);
