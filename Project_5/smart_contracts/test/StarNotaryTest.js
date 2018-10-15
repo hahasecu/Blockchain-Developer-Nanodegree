@@ -11,17 +11,18 @@ contract('StarNotary', accounts => {
 
     beforeEach(async function () {
         this.contract = await StarNotary.new({ from: accounts[0] })
+        // console.log(this.contract)
     })
+
 
     describe('createStar test', () => {
-        it('can create a star', async function () {
-            await this.contract.createStar(name, story, ra, dec, mag, cot, tokenId, { from: accounts[0] });
-
-            it('can create a star and get its info', async function () {
-                assert.deepEqual(await this.contract.tokenIdToStarInfo(tokenId), [name, story, ra, dec, mag, cot]);
-            });
+        it('can create a star and get its info', async function () {
+            await this.contract.createStar(name, story, ra, dec, mag, cot, tokenId, {from: accounts[0]});
+            // console.log(await this.contract.tokenIdToStarInfo(tokenId))
+            assert.deepEqual(await this.contract.tokenIdToStarInfo(tokenId), [name, story, ra, dec, mag, cot]);
         })
     })
+
 
     // describe('buying and selling stars', () => {
     //     let user1 = accounts[1]

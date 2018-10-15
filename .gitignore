@@ -4,4 +4,7 @@ pytest_cache
 notes.md
 test.js
 chaindata
- .pytest_cache
+.pytest_cache
+ERC721-copy.sol
+contract-bty.json
+Project_5/smart_contracts/build/
