@@ -153,6 +153,7 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
 
 - [testnet block explorer](https://live.blockcypher.com/btc-testnet/)
 - [A list of bitcoin-cli](https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list)
+- [elegent js](https://eloquentjavascript.net)
 
 - https://github.com/bitpay/bitcore-message
 - https://github.com/bitcoinjs/bitcoinjs-lib

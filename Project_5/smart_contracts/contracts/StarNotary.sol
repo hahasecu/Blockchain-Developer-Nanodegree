@@ -17,7 +17,7 @@ contract StarNotary is ERC721 {
         string ra;
         string dec;
         string mag;
-        string cot;
+        string cent;
         // mapping(string => Coordinator) coor;
 
     }
@@ -25,10 +25,34 @@ contract StarNotary is ERC721 {
 
     mapping(uint256 => Star) public tokenIdToStarInfo;
     mapping(uint256 => uint256) public starsForSale;
+    mapping(bytes32 => bool) public coordHash;
 
-    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cot, uint256 _tokenId) public {
-        // Coordinator memory newCoor = Coordinator({ra:_ra, dec:_dec, mag:_mag, cot:_cot});
-        Star memory newStar = Star({name:_name, story: _story, ra: _ra, dec: _dec, mag: _mag, cot: _cot});
+    // modifier uniquenessCheck(string _ra, string _dec, string _mag, string _cent) {
+
+    // }
+
+    function generateCoordsHash(string _ra, string _dec, string _mag, string _cent) public pure returns(bytes32){
+        return keccak256(abi.encodePacked(_ra, _dec, _mag, _cent));
+    }
+
+    function isEmpty(string _val) public pure returns(bool){
+        return keccak256(abi.encodePacked(_val)) == keccak256(abi.encodePacked(""));
+    }
+
+    function isExist(string _ra, string _dec, string _mag, string _cent)
+        public
+        view
+        returns(bool){
+        return coordHash[generateCoordsHash(_ra, _dec, _mag, _cent)];
+    }
+
+    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cent, uint256 _tokenId) public {
+        require(!isEmpty(_ra) || !isEmpty(_dec) || !isEmpty(_mag) || !isEmpty(_cent), "ra, dec, mag can not be empty");
+        require(_tokenId != 0, "tokenId can not be 0");
+
+
+
+        Star memory newStar = Star({name:_name, story: _story, ra: _ra, dec: _dec, mag: _mag, cent: _cent});
         tokenIdToStarInfo[_tokenId] = newStar;
 
         _mint(msg.sender, _tokenId);
