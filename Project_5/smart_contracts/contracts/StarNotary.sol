@@ -39,7 +39,7 @@ contract StarNotary is ERC721 {
         return keccak256(abi.encodePacked(_val)) == keccak256(abi.encodePacked(""));
     }
 
-    function isExist(string _ra, string _dec, string _mag, string _cent)
+    function checkIfStarExist(string _ra, string _dec, string _mag, string _cent)
         public
         view
         returns(bool){
@@ -50,7 +50,7 @@ contract StarNotary is ERC721 {
         require(_tokenId != 0, "tokenId can not be 0");
         require(!isEmpty(_ra) || !isEmpty(_dec) || !isEmpty(_mag) || !isEmpty(_cent), "ra, dec, mag can not be empty");
 
-        require(!isExist(_ra, _dec, _mag, _cent), "This start aready registered");
+        require(!checkIfStarExist(_ra, _dec, _mag, _cent), "This star aready registered");
 
         Star memory newStar = Star({name:_name, story: _story, ra: _ra, dec: _dec, mag: _mag, cent: _cent});
 
@@ -61,6 +61,10 @@ contract StarNotary is ERC721 {
         _mint(msg.sender, _tokenId);
 
 
+    }
+
+    function mint(uint256 tokenId) public {
+        _mint(msg.sender, tokenId);
     }
 
 

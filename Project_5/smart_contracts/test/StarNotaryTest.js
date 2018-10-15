@@ -34,7 +34,7 @@ contract('StarNotary', accounts => {
 
         it("will check if a start already registered", async function (){
             await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[2]});
-            let isExt = await this.contract.isExist(ra, dec, mag, cent);
+            let isExt = await this.contract.checkIfStarExist(ra, dec, mag, cent);
             assert.equal(isExt, true);
         })
     })
