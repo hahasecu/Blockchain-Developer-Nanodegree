@@ -4,18 +4,28 @@ import 'openzeppelin-solidity/contracts/token/ERC721/ERC721.sol';
 
 contract StarNotary is ERC721 {
 
+     struct Coordinator {
+        string ra;
+        string dec;
+        string mag;
+        string cot;
+    }
+
     struct Star {
         string name;
-        string Dec;
-        string 
+        string story;
+        Coordinator coor;
 
     }
+
 
     mapping(uint256 => Star) public tokenIdToStarInfo;
     mapping(uint256 => uint256) public starsForSale;
 
-    function createStar(string _name, uint256 _tokenId) public {
-        Star memory newStar = Star(_name);
+    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cot, uint256 _tokenId) public {
+        Coordinator memory newCoor = Coordinator(_ra, _dec, _mag, _cot);
+
+        Star memory newStar = Star(_name, _story, newCoor);
 
         tokenIdToStarInfo[_tokenId] = newStar;
 

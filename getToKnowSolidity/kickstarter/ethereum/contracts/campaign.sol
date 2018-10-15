@@ -30,6 +30,8 @@ contract Compaign {
 
     }
 
+   
+
     Request[] public requests;
     address public manager;
     uint public minimumContribution;
