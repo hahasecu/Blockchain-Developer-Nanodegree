@@ -19,7 +19,6 @@ contract('StarNotary', accounts => {
         it('can create a star and get its info', async function () {
             await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[0]});
             // console.log(await this.contract.tokenIdToStarInfo(tokenId))
-            // console.log(this.contract);
             assert.deepEqual(await this.contract.tokenIdToStarInfo(tokenId), [name, story, ra, dec, mag, cent]);
         });
 
@@ -31,6 +30,12 @@ contract('StarNotary', accounts => {
         it("will generate a hash with keccak256", async function(){
             let hsh = await this.contract.generateCoordsHash(ra, dec, mag, cent);
             assert.equal(hsh, '0xca3b5818f40e387895371bd04b85b0af950833fbaa742abd454161de67a88ecc')
+        });
+
+        it("will check if a start already registered", async function (){
+            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[2]});
+            let isExt = await this.contract.isExist(ra, dec, mag, cent);
+            assert.equal(isExt, true);
         })
     })
 

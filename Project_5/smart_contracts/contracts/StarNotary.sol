@@ -47,15 +47,20 @@ contract StarNotary is ERC721 {
     }
 
     function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cent, uint256 _tokenId) public {
-        require(!isEmpty(_ra) || !isEmpty(_dec) || !isEmpty(_mag) || !isEmpty(_cent), "ra, dec, mag can not be empty");
         require(_tokenId != 0, "tokenId can not be 0");
+        require(!isEmpty(_ra) || !isEmpty(_dec) || !isEmpty(_mag) || !isEmpty(_cent), "ra, dec, mag can not be empty");
 
-
+        require(!isExist(_ra, _dec, _mag, _cent), "This start aready registered");
 
         Star memory newStar = Star({name:_name, story: _story, ra: _ra, dec: _dec, mag: _mag, cent: _cent});
+
         tokenIdToStarInfo[_tokenId] = newStar;
 
+        coordHash[generateCoordsHash(_ra, _dec, _mag, _cent)] = true;
+
         _mint(msg.sender, _tokenId);
+
+
     }
 
 
