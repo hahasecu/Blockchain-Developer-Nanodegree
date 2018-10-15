@@ -26,6 +26,9 @@ contract StarNotary is ERC721 {
     mapping(uint256 => Star) public tokenIdToStarInfo;
     mapping(uint256 => uint256) public starsForSale;
     mapping(bytes32 => bool) public coordHash;
+    mapping(uint => address) public tokenIdToOwner;
+    // Mapping from token ID to approved address
+    mapping (uint256 => address) private _tokenApprovals;
 
     // modifier uniquenessCheck(string _ra, string _dec, string _mag, string _cent) {
 
@@ -46,7 +49,9 @@ contract StarNotary is ERC721 {
         return coordHash[generateCoordsHash(_ra, _dec, _mag, _cent)];
     }
 
-    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cent, uint256 _tokenId) public {
+    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cent, uint256 _tokenId)
+        public
+        {
         require(_tokenId != 0, "tokenId can not be 0");
         require(!isEmpty(_ra) || !isEmpty(_dec) || !isEmpty(_mag) || !isEmpty(_cent), "ra, dec, mag can not be empty");
 
@@ -55,6 +60,7 @@ contract StarNotary is ERC721 {
         Star memory newStar = Star({name:_name, story: _story, ra: _ra, dec: _dec, mag: _mag, cent: _cent});
 
         tokenIdToStarInfo[_tokenId] = newStar;
+        tokenIdToOwner[_tokenId] = msg.sender;
 
         coordHash[generateCoordsHash(_ra, _dec, _mag, _cent)] = true;
 
@@ -67,9 +73,35 @@ contract StarNotary is ERC721 {
         _mint(msg.sender, tokenId);
     }
 
+    function ownerOf(uint256 tokenId) public view returns (address) {
+        address owner = tokenIdToOwner[tokenId];
+        require(owner != address(0));
+        return owner;
+    }
+
+
+    // function isApprovedForAll(
+    //     address owner,
+    //     address operator
+    // )
+    //     public
+    //     view
+    //     returns (bool)
+    // {
+    //     return _operatorApprovals[owner][operator];
+    // }
+
+    // function approve(address to, uint256 tokenId) public {
+    //     address owner = ownerOf(tokenId);
+    //     require(to != owner);
+    //     require(msg.sender == owner || super.isApprovedForAll(owner, msg.sender));
+
+    //     _tokenApprovals[tokenId] = to;
+    //     emit Approval(owner, to, tokenId);
+    // }
 
     function putStarUpForSale(uint256 _tokenId, uint256 _price) public {
-        require(this.ownerOf(_tokenId) == msg.sender);
+        require(ownerOf(_tokenId) == msg.sender);
 
         starsForSale[_tokenId] = _price;
     }
@@ -78,7 +110,7 @@ contract StarNotary is ERC721 {
         require(starsForSale[_tokenId] > 0);
 
         uint256 starCost = starsForSale[_tokenId];
-        address starOwner = this.ownerOf(_tokenId);
+        address starOwner = ownerOf(_tokenId);
         require(msg.value >= starCost);
 
         _removeTokenFrom(starOwner, _tokenId);

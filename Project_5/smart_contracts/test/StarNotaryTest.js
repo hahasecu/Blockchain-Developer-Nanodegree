@@ -37,8 +37,28 @@ contract('StarNotary', accounts => {
             let isExt = await this.contract.checkIfStarExist(ra, dec, mag, cent);
             assert.equal(isExt, true);
         })
+    });
+
+    describe("ownership", () => {
+        it("will return  the owner address", async function(){
+            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[4]});
+
+            let owner = await this.contract.ownerOf(tokenId);
+            assert.equal(accounts[4], owner);
+        });
+
+        // it("will transfer ownership of a given token", async function (){
+        //     await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[4]});
+        //     await this.contract.approve(accounts[5], tokenId);
+        //     let newOwner = await this.contract.ownerOf(tokenId);
+        //     assert.equal(accounts[5], newOwner);
+
+
+        // });
     })
 
+    // it("will transfer ownership of a given token", async function() {
+    // });
 
 
 
