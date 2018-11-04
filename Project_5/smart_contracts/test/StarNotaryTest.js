@@ -36,6 +36,12 @@ contract('StarNotary', accounts => {
             await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[2]});
             let isExt = await this.contract.checkIfStarExist(ra, dec, mag, cent);
             assert.equal(isExt, true);
+        });
+
+        it ("will return the start info", async function(){
+            let starInfo = await this.contract.tokenIdToStarInfo(tokenId);
+            // assert.equal(startInfo, [name, story, ra, dec, mag])
+            console.log(starInfo)
         })
     });
 

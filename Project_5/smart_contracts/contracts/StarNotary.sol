@@ -72,14 +72,14 @@ contract StarNotary is ERC721 {
 
         coordHash[generateCoordsHash(_ra, _dec, _mag, _cent)] = true;
 
-        _mint(msg.sender, _tokenId);
+        mint(_tokenId);
     }
 
 
     function putStarUpForSale(uint256 _tokenId, uint256 _price)
         public
         {
-        require(this.ownerOf(_tokenId) == msg.sender);
+        require(ownerOf(_tokenId) == msg.sender);
 
         starsForSale[_tokenId] = _price;
         }
@@ -89,7 +89,7 @@ contract StarNotary is ERC721 {
         require(starsForSale[_tokenId] > 0);
 
         uint256 starCost = starsForSale[_tokenId];
-        address starOwner = this.ownerOf(_tokenId);
+        address starOwner = ownerOf(_tokenId);
         require(msg.value >= starCost);
 
         _removeTokenFrom(starOwner, _tokenId);
@@ -102,6 +102,32 @@ contract StarNotary is ERC721 {
         }
     }
 
+    function tokenIdToStarInfo(uint256 _tokenId) public view returns(string, string, string, string, string, string){
+        return (tokenIdToStarInfo[_tokenId].name, tokenIdToStarInfo[_tokenId].story, tokenIdToStarInfo[_tokenId].ra, tokenIdToStarInfo[_tokenId].dec, tokenIdToStarInfo[_tokenId].mag, tokenIdToStarInfo[_tokenId].cent);
+    }
+
+
+    function mint(uint256 _tokenId) public {
+        super._mint(msg.sender, _tokenId);
+    }
+
+
+  /**
+     @notice Find the owner of an NFT
+     @dev NFTs assigned to zero address are considered invalid, and queries
+     about them do throw.
+     @param _tokenId The identifier for an NFT
+     @return The address of the owner of the NFT
+
+     */
+    function ownerOf(uint256 _tokenId) public view returns (address) {
+       return super.ownerOf(_tokenId);
+    }
+
+
+
+
+
     /**
         @notice Change or reaffirm the approved address for an NFT
         @dev The zero address indicates there is no approved address.
@@ -111,13 +137,13 @@ contract StarNotary is ERC721 {
         @param _tokenId The NFT to approve
 
      */
-    function approve(address _approved, uint256 _tokenId) public {
-        require(tokenToOwner[_tokenId] == msg.sender);
+    // function approve(address _approved, uint256 _tokenId) public {
+    //     require(tokenToOwner[_tokenId] == msg.sender);
 
-        tokenToApproved[_tokenId] = _approved;
+    //     tokenToApproved[_tokenId] = _approved;
 
-        emit Approval(msg.sender, _approved, _tokenId);
-    }
+    //     emit Approval(msg.sender, _approved, _tokenId);
+    // }
 
 
     /**
@@ -126,24 +152,11 @@ contract StarNotary is ERC721 {
      @param _tokenId The NFT to find the approved address for
      @return The approved address for this NFT, or the zero address if there is none
      */
-     function getApproved(uint256 _tokenId) public view returns (address) {
-         return tokenToApproved[_tokenId];
-     }
+    //  function getApproved(uint256 _tokenId) public view returns (address) {
+    //      return tokenToApproved[_tokenId];
+    //  }
 
 
-    /**
-     @notice Find the owner of an NFT
-     @dev NFTs assigned to zero address are considered invalid, and queries
-     about them do throw.
-     @param _tokenId The identifier for an NFT
-     @return The address of the owner of the NFT
-
-     */
-    function ownerOf(uint256 _tokenId) public view returns (address) {
-        address owner = tokenToOwner[_tokenId];
-        require(owner != address(0));
-        return owner;
-    }
 
 
 
