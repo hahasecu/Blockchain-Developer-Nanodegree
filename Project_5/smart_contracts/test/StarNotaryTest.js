@@ -131,7 +131,54 @@ contract('StarNotary', accounts => {
             assert.equal(tx.logs[0].args.approved, true);
 
         })
-    })
+    });
+
+    // describe ("can transfer star ownership", async function(){
+    //     let tx;
+    //     beforeEach(async function(){
+    //         await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[6]});
+    //         tx = await this.contract.safeTransferFrom(accounts[6], accounts[7], tokenId);
+    //         // console.log(tx);
+    //     });
+
+    //     it("will show the star has new owner", async function(){
+    //         console.log(tx);
+    //         // assert.equal(await this.contract.ownerOf(tokenId), accounts[2]);
+    //     });
+    // })
+
+
+
+    describe("can transfer star ownership", () => {
+        let tx;
+
+        beforeEach( async function(){
+            // await this.contract.mint(tokenId, {from: accounts[1]});
+            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
+            tx = await this.contract.safeTransferFrom(accounts[1], accounts[2], tokenId, "",
+                {from: accounts[1]});
+        });
+
+        it("star has new owner", async function(){
+            assert.equal(await this.contract.ownerOf(tokenId), accounts[2])
+        });
+
+        it("emit the correct events", async function(){
+            console.log(tx.logs)
+            assert.equal(tx.logs[0].event, 'Transfer');
+            assert.equal(tx.logs[0].args.tokenId, tokenId);
+            assert.equal(tx.logs[0].args.to, accounts[2]);
+            assert.equal(tx.logs[0].args.from, accounts[1]);
+        });
+
+        it("only permissioned users can transfer stars", async function (){
+            let randomPersonTryingToStealTokens = accounts[4]
+
+            await expectThrow(this.contract.safeTransferFrom(accounts[1], randomPersonTryingToStealTokens,
+                tokenId, {from: randomPersonTryingToStealTokens}))
+        });
+
+    });
 
 
 })
@@ -149,34 +196,6 @@ var expectThrow = async function(promise) {
 
 
 
-    // describe("can transfer star ownership", () => {
-    //     let tx;
-
-    //     beforeEach( async function(){
-    //         await this.contract.mint(tokenId, {from: accounts[1]});
-    //         tx = await this.contract.transferFrom(accounts[1], accounts[2], tokenId,
-    //             {from: accounts[1]});
-    //     });
-
-    //     it("star has new owner", async function(){
-    //         assert.equal(await this.contract.ownerOf(tokenId), accounts[2])
-    //     });
-
-        // it("emit the correct events", async function(){
-        //     assert.equal(tx.logs[0].event, 'Transfer');
-        //     assert.equal(tx.logs[0].args._tokenId, tokenId);
-        //     assert.equal(tx.logs[0].args._to, accounts[2]);
-        //     assert.equal(tx.logs[0].args._from, accounts[1]);
-        // });
-
-        // it("only permissioned users can transfer stars", async function (){
-        //     let randomPersonTryingToStealTokens = accounts[4]
-
-        //     await expectThrow(this.contract.transferFrom(user1, randomPersonTryingToStealTokens,
-        //         tokenId, {from: randomPersonTryingToStealTokens}))
-        // });
-
-    // });
 
 
 

@@ -24,6 +24,9 @@ contract StarNotary is ERC721 {
     // Mapping from token ID to approved address
     mapping (uint256 => address) private _tokenApprovals;
 
+     // Equals to `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`
+    // which can be also obtained as `IERC721Receiver(0).onERC721Received.selector`
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 
     modifier hasPermission(address _caller, uint256 _tokenId) {
         require(_caller == tokenToOwner[_tokenId]
@@ -207,63 +210,86 @@ contract StarNotary is ERC721 {
         returns (bool)
         {
         return ownerToOperator[_owner][_operator];
+
+    }
+    /**
+    * @dev Safely transfers the ownership of a given token ID to another address
+    * If the target address is a contract, it must implement `onERC721Received`,
+    * which is called upon a safe transfer, and return the magic value
+    * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+    * the transfer is reverted.
+    * Requires the msg sender to be the owner, approved, or operator
+    * @param from current owner of the token
+    * @param to address to receive the ownership of the given token ID
+    * @param tokenId uint256 ID of the token to be transferred
+    * @param _data bytes data to send along with a safe transfer check
+    */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes _data
+    )
+        public
+    {
+        transferFrom(from, to, tokenId);
+        // solium-disable-next-line arg-overflow
+        require(_checkAndCallSafeTransfer(from, to, tokenId, _data));
     }
 
 
 
+ /**
+   * @dev Safely transfers the ownership of a given token ID to another address
+   * If the target address is a contract, it must implement `onERC721Received`,
+   * which is called upon a safe transfer, and return the magic value
+   * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+   * the transfer is reverted.
+   *
+   * Requires the msg sender to be the owner, approved, or operator
+   * @param from current owner of the token
+   * @param to address to receive the ownership of the given token ID
+   * @param tokenId uint256 ID of the token to be transferred
+  */
+  function safeTransferFrom(
+    address from,
+    address to,
+    uint256 tokenId
+  )
+    public
+    hasPermission(from, tokenId)
+  {
+    // solium-disable-next-line arg-overflow
+    safeTransferFrom(from, to, tokenId, "");
+  }
+
+
+
+    /// @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
+    ///  TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
+    ///  THEY MAY BE PERMANENTLY LOST
+    /// @dev Throws unless `msg.sender` is the current owner, an authorized
+    ///  operator, or the approved address for this NFT. Throws if `_from` is
+    ///  not the current owner. Throws if `_to` is the zero address. Throws if
+    ///  `_tokenId` is not a valid NFT.
+    /// @param from The current owner of the NFT
+    /// @param to The new owner
+    /// @param tokenId The NFT to transfer
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    )
+        public
+   {
+        require(_isApprovedOrOwner(msg.sender, tokenId));
+        require(to != address(0));
+
+        _clearApproval(from, tokenId);
+        _removeTokenFrom(from, tokenId);
+        _addTokenTo(to, tokenId);
+
+        emit Transfer(from, to, tokenId);
+  }
+
 }
-
-
-
-
-
-
-
-//     /**
-//    * @dev Safely transfers the ownership of a given token ID to another address
-//    * If the target address is a contract, it must implement `onERC721Received`,
-//    * which is called upon a safe transfer, and return the magic value
-//    * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-//    * the transfer is reverted.
-//    * Requires the msg sender to be the owner, approved, or operator
-//    * @param from current owner of the token
-//    * @param to address to receive the ownership of the given token ID
-//    * @param tokenId uint256 ID of the token to be transferred
-//    * @param _data bytes data to send along with a safe transfer check
-//    */
-//     function safeTransferFrom(
-//         address from,
-//         address to,
-//         uint256 tokenId,
-//         bytes _data
-//     )
-//         public
-//     {
-//         // transferFrom(from, to, tokenId);
-//         // // solium-disable-next-line arg-overflow
-//         // require(_checkAndCallSafeTransfer(from, to, tokenId, _data));
-//         ERC721.safeTransferFrom(from, to, tokenId, _data);
-//     }
-
-
-
-
-    // /// @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
-    // ///  TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
-    // ///  THEY MAY BE PERMANENTLY LOST
-    // /// @dev Throws unless `msg.sender` is the current owner, an authorized
-    // ///  operator, or the approved address for this NFT. Throws if `_from` is
-    // ///  not the current owner. Throws if `_to` is the zero address. Throws if
-    // ///  `_tokenId` is not a valid NFT.
-    // /// @param _from The current owner of the NFT
-    // /// @param _to The new owner
-    // /// @param _tokenId The NFT to transfer
-    // function transferFrom(address _from, address _to, uint256 _tokenId) external payable hasPermission(msg.sender, _tokenId) {
-
-    // //     tokenToOwner[_tokenId] = _to;
-    // //     ownerToBalance[_from] -= 1;
-
-    // //     emit Transfer(_from, _to, _tokenId);
-    // }
-
-
