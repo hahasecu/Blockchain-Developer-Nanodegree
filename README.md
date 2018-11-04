@@ -63,7 +63,6 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
     <!-- Run Ganache CLI -->
     ganache-cli
 
-
     <!-- Stop Ganache and modify your Ganache command line statement to include --mnemonic "string of words". -->
     ganache-cli --mnemonic 'trick core barely fold sample icon display hollow smoke task emotion pepper'
 
@@ -153,7 +152,8 @@ Hex to Image: xxd -p -r img.txt imgDecoded.png
 
 - [testnet block explorer](https://live.blockcypher.com/btc-testnet/)
 - [A list of bitcoin-cli](https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list)
-- [elegent js](https://eloquentjavascript.net)
+- [Elegent js](https://eloquentjavascript.net)
+- [Check more source](https://www.ethereum.org/token)
 
 - https://github.com/bitpay/bitcore-message
 - https://github.com/bitcoinjs/bitcoinjs-lib
@@ -191,6 +191,19 @@ nvm use v0.4.12 // user certain version
 - nvm: node version manager
 - npm
 - nodejs framework: https://nordicapis.com/13-node-js-frameworks-to-build-web-apis/
+
+- use regnet
+```
+<!-- start regtest -->
+bitcoind -regtest -daemon
+
+<!-- generate 101 blocks -->
+bitcoin-cli -regtest generate 101
+
+<!-- get balance -->
+bitcoin-cli -regtest getbalance
+
+```
 
 ### Solidity
 ```
