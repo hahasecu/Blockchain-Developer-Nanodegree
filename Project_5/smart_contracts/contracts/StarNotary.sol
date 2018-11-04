@@ -178,7 +178,36 @@ contract StarNotary is ERC721 {
         return tokenToApproved[_tokenId];
     }
 
+    /**
+        @notice Enable or disable approval for a third party ("operator") to manage
+        all of `msg.sender`'s assets
+        @dev Emits the ApprovalForAll event. The contract MUST allow
+        multiple operators per owner.
+        @param _operator Address to add to the set of authorized operators
+        @param _approved True if the operator is approved, false to revoke approval
+     */
+    function setApprovalForAll(address _operator, bool _approved)
+        public
+    {
+        ownerToOperator[msg.sender][_operator] = _approved;
+        emit ApprovalForAll(msg.sender, _operator, _approved);
+        // ERC721.setApprovalForAll(_operator, _approved);
+    }
 
+
+    /**
+        @notice Query if an address is an authorized operator for another address
+        @param _owner The address that owns the NFTs
+        @param _operator The address that acts on behalf of the owner
+        @return True if `_operator` is an approved operator for `_owner`, false otherwise
+
+     */
+    function isApprovedForAll(address _owner, address _operator)        public
+        view
+        returns (bool)
+        {
+        return ownerToOperator[_owner][_operator];
+    }
 
 
 
@@ -187,28 +216,8 @@ contract StarNotary is ERC721 {
 
 
 
-    // /// @notice Query if an address is an authorized operator for another address
-    // /// @param _owner The address that owns the NFTs
-    // /// @param _operator The address that acts on behalf of the owner
-    // /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
-    // function isApprovedForAll(address _owner, address _operator) public view returns (bool) {
-    //     return ownerToOperator[_owner][_operator];
-    // }
 
 
-    // /// @notice Enable or disable approval for a third party ("operator") to manage
-    // ///  all of `msg.sender`'s assets
-    // /// @dev Emits the ApprovalForAll event. The contract MUST allow
-    // ///  multiple operators per owner.
-    // /// @param _operator Address to add to the set of authorized operators
-    // /// @param _approved True if the operator is approved, false to revoke approval
-    // function setApprovalForAll(address _operator, bool _approved)
-    //     public
-    // {
-    //     // ownerToOperator[msg.sender][_operator] = _approved;
-    //     // emit ApprovalForAll(msg.sender, _operator, _approved);
-    //     ERC721.setApprovalForAll(_operator, _approved);
-    // }
 
 //     /**
 //    * @dev Safely transfers the ownership of a given token ID to another address

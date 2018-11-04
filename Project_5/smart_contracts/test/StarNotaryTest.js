@@ -90,7 +90,6 @@ contract('StarNotary', accounts => {
         let starId = tokenId;
         let starPrice = web3.toWei(.01, "ether")
         beforeEach(async function (){
-            // await this.contract.mint(tokenId, {from: accounts[1]});
             await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
             await this.contract.putStarUpForSale(starId, starPrice, {from: accounts[1]})
             tx = await this.contract.approve(accounts[2], tokenId, {from: accounts[1]});
@@ -113,6 +112,26 @@ contract('StarNotary', accounts => {
             assert.equal(tx.logs[0].args.owner, accounts[1]);
         });
     });
+
+
+    describe("can set an operator", () => {
+        let tx;
+        beforeEach(async function (){
+            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[4]});
+            tx = await this.contract.setApprovalForAll(accounts[5], true,
+                {from: accounts[4]});
+        });
+
+        it("can set an operator", async function(){
+            // console.log(await this.contract.isApprovedForAll(accounts[5], accounts[4])
+            assert.equal(await this.contract.isApprovedForAll(accounts[4], accounts[5]), true)
+            assert.equal(tx.logs[0].event, 'ApprovalForAll');
+            assert.equal(tx.logs[0].args.owner, accounts[4]);
+            assert.equal(tx.logs[0].args.operator, accounts[5]);
+            assert.equal(tx.logs[0].args.approved, true);
+
+        })
+    })
 
 
 })
@@ -158,20 +177,6 @@ var expectThrow = async function(promise) {
         // });
 
     // });
-
-    // describe("can set an operator", () => {
-    //     let tx;
-
-    //     beforeEach(async function (){
-    //         await this.contract.mint(tokenId, {from: accounts[1]});
-    //         tx = await this.contract.setApprovalForAll(accounts[3], true,
-    //             {from: accounts[1]});
-    //     });
-
-    //     it("can set an operator", async function(){
-    //         assert.equal(await this.contract.isApprovedForAll(accounts[1], accounts[3]), true)
-    //     })
-    // })
 
 
 
