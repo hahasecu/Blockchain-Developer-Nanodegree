@@ -133,20 +133,6 @@ contract('StarNotary', accounts => {
         })
     });
 
-    // describe ("can transfer star ownership", async function(){
-    //     let tx;
-    //     beforeEach(async function(){
-    //         await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[6]});
-    //         tx = await this.contract.safeTransferFrom(accounts[6], accounts[7], tokenId);
-    //         // console.log(tx);
-    //     });
-
-    //     it("will show the star has new owner", async function(){
-    //         console.log(tx);
-    //         // assert.equal(await this.contract.ownerOf(tokenId), accounts[2]);
-    //     });
-    // })
-
 
 
     describe("can transfer star ownership", () => {
@@ -155,16 +141,16 @@ contract('StarNotary', accounts => {
         beforeEach( async function(){
             // await this.contract.mint(tokenId, {from: accounts[1]});
             await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
-            tx = await this.contract.safeTransferFrom(accounts[1], accounts[2], tokenId, "",
-                {from: accounts[1]});
+            tx = await this.contract.safeTransferFrom(accounts[1], accounts[2], tokenId, {from: accounts[1]});
         });
 
         it("star has new owner", async function(){
+            // console.log(await this.contract.ownerOf(tokenId))
             assert.equal(await this.contract.ownerOf(tokenId), accounts[2])
         });
 
         it("emit the correct events", async function(){
-            console.log(tx.logs)
+            // console.log(tx.logs)
             assert.equal(tx.logs[0].event, 'Transfer');
             assert.equal(tx.logs[0].args.tokenId, tokenId);
             assert.equal(tx.logs[0].args.to, accounts[2]);

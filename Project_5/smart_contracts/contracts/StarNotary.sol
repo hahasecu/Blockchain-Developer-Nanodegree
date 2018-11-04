@@ -79,9 +79,9 @@ contract StarNotary is ERC721 {
     }
 
 
-    // function starsForSale(uint256 _starId, uint256 _price) public{
-    //     starsForSale[_starId] = _price;
-    // }
+    function starsForSale(uint256 _starId) public view returns(uint256){
+        return starsForSale[_starId];
+    }
 
     function putStarUpForSale(uint256 _starId, uint256 _price)
         public
@@ -119,11 +119,6 @@ contract StarNotary is ERC721 {
             tokenIdToStarInfo[_tokenId].cent);
     }
 
-    //  function tokenIdToStarInfo(uint256 _tokenId) public view returns(string){
-    //     return tokenIdToStarInfo[_tokenId].name;
-    // }
-
-
     function mint(uint256 _tokenId) public {
         super._mint(msg.sender, _tokenId);
     }
@@ -144,10 +139,6 @@ contract StarNotary is ERC721 {
     {
         return super.ownerOf(_tokenId);
     }
-
-
-
-
 
     /**
         @notice Change or reaffirm the approved address for an NFT
@@ -197,7 +188,6 @@ contract StarNotary is ERC721 {
         // ERC721.setApprovalForAll(_operator, _approved);
     }
 
-
     /**
         @notice Query if an address is an authorized operator for another address
         @param _owner The address that owns the NFTs
@@ -213,16 +203,16 @@ contract StarNotary is ERC721 {
 
     }
     /**
-    * @dev Safely transfers the ownership of a given token ID to another address
-    * If the target address is a contract, it must implement `onERC721Received`,
-    * which is called upon a safe transfer, and return the magic value
-    * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-    * the transfer is reverted.
-    * Requires the msg sender to be the owner, approved, or operator
-    * @param from current owner of the token
-    * @param to address to receive the ownership of the given token ID
-    * @param tokenId uint256 ID of the token to be transferred
-    * @param _data bytes data to send along with a safe transfer check
+        * @dev Safely transfers the ownership of a given token ID to another address
+        * If the target address is a contract, it must implement `onERC721Received`,
+        * which is called upon a safe transfer, and return the magic value
+        * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+        * the transfer is reverted.
+        * Requires the msg sender to be the owner, approved, or operator
+        * @param from current owner of the token
+        * @param to address to receive the ownership of the given token ID
+        * @param tokenId uint256 ID of the token to be transferred
+        * @param _data bytes data to send along with a safe transfer check
     */
     function safeTransferFrom(
         address from,
@@ -237,51 +227,51 @@ contract StarNotary is ERC721 {
         require(_checkAndCallSafeTransfer(from, to, tokenId, _data));
     }
 
+    /**
+        * @dev Safely transfers the ownership of a given token ID to another address
+        * If the target address is a contract, it must implement `onERC721Received`,
+        * which is called upon a safe transfer, and return the magic value
+        * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+        * the transfer is reverted.
+        *
+        * Requires the msg sender to be the owner, approved, or operator
+        * @param from current owner of the token
+        * @param to address to receive the ownership of the given token ID
+        * @param tokenId uint256 ID of the token to be transferred
+    */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    )
+        public
+        hasPermission(from, tokenId)
+    {
+        // solium-disable-next-line arg-overflow
+        safeTransferFrom(from, to, tokenId, "");
+    }
 
 
- /**
-   * @dev Safely transfers the ownership of a given token ID to another address
-   * If the target address is a contract, it must implement `onERC721Received`,
-   * which is called upon a safe transfer, and return the magic value
-   * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-   * the transfer is reverted.
-   *
-   * Requires the msg sender to be the owner, approved, or operator
-   * @param from current owner of the token
-   * @param to address to receive the ownership of the given token ID
-   * @param tokenId uint256 ID of the token to be transferred
-  */
-  function safeTransferFrom(
-    address from,
-    address to,
-    uint256 tokenId
-  )
-    public
-    hasPermission(from, tokenId)
-  {
-    // solium-disable-next-line arg-overflow
-    safeTransferFrom(from, to, tokenId, "");
-  }
+    /**
+        @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
+        TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
+        THEY MAY BE PERMANENTLY LOST
+        @dev Throws unless `msg.sender` is the current owner, an authorized
+        operator, or the approved address for this NFT. Throws if `_from` is
+        not the current owner. Throws if `_to` is the zero address. Throws if
+        `_tokenId` is not a valid NFT.
+        @param from The current owner of the NFT
+        @param to The new owner
+        @param tokenId The NFT to transfer
 
-
-
-    /// @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
-    ///  TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
-    ///  THEY MAY BE PERMANENTLY LOST
-    /// @dev Throws unless `msg.sender` is the current owner, an authorized
-    ///  operator, or the approved address for this NFT. Throws if `_from` is
-    ///  not the current owner. Throws if `_to` is the zero address. Throws if
-    ///  `_tokenId` is not a valid NFT.
-    /// @param from The current owner of the NFT
-    /// @param to The new owner
-    /// @param tokenId The NFT to transfer
+     */
     function transferFrom(
         address from,
         address to,
         uint256 tokenId
     )
         public
-   {
+    {
         require(_isApprovedOrOwner(msg.sender, tokenId));
         require(to != address(0));
 
@@ -290,6 +280,6 @@ contract StarNotary is ERC721 {
         _addTokenTo(to, tokenId);
 
         emit Transfer(from, to, tokenId);
-  }
+    }
 
 }
