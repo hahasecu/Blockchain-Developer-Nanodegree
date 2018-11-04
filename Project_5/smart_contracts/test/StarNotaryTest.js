@@ -85,33 +85,34 @@ contract('StarNotary', accounts => {
     })
 
 
-    // describe("can grant approval to transfer", () => {
-    //     let tx;
-    //     let starId = 1;
-    //     let starPrice = web3.toWei(.01, "ether")
-    //     beforeEach(async function (){
-    //         // await this.contract.mint(tokenId, {from: accounts[1]});
-    //         await this.contract.putStarUpForSale(starId, starPrice, {from: accounts[1]})
-    //         tx = await this.contract.approve(accounts[2], tokenId, {from: accounts[1]});
-    //     });
+    describe("can grant approval to transfer", () => {
+        let tx;
+        let starId = tokenId;
+        let starPrice = web3.toWei(.01, "ether")
+        beforeEach(async function (){
+            // await this.contract.mint(tokenId, {from: accounts[1]});
+            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
+            await this.contract.putStarUpForSale(starId, starPrice, {from: accounts[1]})
+            tx = await this.contract.approve(accounts[2], tokenId, {from: accounts[1]});
+        });
 
-    //     it("set accounts[2] as an approved address", async function(){
-    //         assert.equal(await this.contract.getApproved(tokenId), accounts[2]);
-    //     });
+        it("set accounts[2] as an approved address", async function(){
+            assert.equal(await this.contract.getApproved(tokenId), accounts[2]);
+        });
 
-    //     it("allow accouts[2] to transfer", async function(){
-    //         await this.contract.transferFrom(accounts[1], accounts[2], tokenId
-    //             ,{from: accounts[2] });
-    //         assert.equal(await this.contract.ownerOf(tokenId), accounts[2]);
-    //     });
+        it("allow accouts[2] to transfer", async function(){
+            await this.contract.transferFrom(accounts[1], accounts[2], tokenId
+                ,{from: accounts[2] });
+            assert.equal(await this.contract.ownerOf(tokenId), accounts[2]);
+        });
 
-    //     it("emits the correct event", async function(){
-    //         assert.equal(tx.logs[0].event, 'Approval');
-    //         assert.equal(tx.logs[0].args._tokenId, tokenId);
-    //         assert.equal(tx.logs[0].args._to, accounts[2]);
-    //         assert.equal(tx.logs[0].args._from, accounts[1]);
-    //     });
-    // });
+        it("emits the correct event", async function(){
+            assert.equal(tx.logs[0].event, 'Approval');
+            assert.equal(tx.logs[0].args.tokenId, tokenId);
+            assert.equal(tx.logs[0].args.approved, accounts[2]);
+            assert.equal(tx.logs[0].args.owner, accounts[1]);
+        });
+    });
 
 
 })

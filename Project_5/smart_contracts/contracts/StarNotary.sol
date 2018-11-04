@@ -126,14 +126,14 @@ contract StarNotary is ERC721 {
     }
 
 
-  /**
-     @notice Find the owner of an NFT
-     @dev NFTs assigned to zero address are considered invalid, and queries
-     about them do throw.
-     @param _tokenId The identifier for an NFT
-     @return The address of the owner of the NFT
+    /**
+        @notice Find the owner of an NFT
+        @dev NFTs assigned to zero address are considered invalid, and queries
+        about them do throw.
+        @param _tokenId The identifier for an NFT
+        @return The address of the owner of the NFT
 
-     */
+    */
     function ownerOf(uint256 _tokenId)
         public
         view
@@ -155,24 +155,28 @@ contract StarNotary is ERC721 {
         @param _tokenId The NFT to approve
 
      */
-    // function approve(address _approved, uint256 _tokenId) public {
-    //     require(tokenToOwner[_tokenId] == msg.sender);
+    function approve(address _approved, uint256 _tokenId) public {
+        require(tokenToOwner[_tokenId] == msg.sender);
 
-    //     tokenToApproved[_tokenId] = _approved;
+        tokenToApproved[_tokenId] = _approved;
 
-    //     emit Approval(msg.sender, _approved, _tokenId);
-    // }
+        emit Approval(msg.sender, _approved, _tokenId);
+    }
 
 
     /**
-     @notice Get the approved address for a single NFT
-     @dev Throws if `_tokenId` is not a valid NFT.
-     @param _tokenId The NFT to find the approved address for
-     @return The approved address for this NFT, or the zero address if there is none
+        @notice Get the approved address for a single NFT
+        @dev Throws if `_tokenId` is not a valid NFT.
+        @param _tokenId The NFT to find the approved address for
+        @return The approved address for this NFT, or the zero address if there is none
      */
-    //  function getApproved(uint256 _tokenId) public view returns (address) {
-    //      return tokenToApproved[_tokenId];
-    //  }
+    function getApproved(uint256 _tokenId)
+        public
+        view
+        returns (address)
+        {
+        return tokenToApproved[_tokenId];
+    }
 
 
 
