@@ -76,21 +76,26 @@ contract StarNotary is ERC721 {
     }
 
 
-    function putStarUpForSale(uint256 _tokenId, uint256 _price)
+    // function starsForSale(uint256 _starId, uint256 _price) public{
+    //     starsForSale[_starId] = _price;
+    // }
+
+    function putStarUpForSale(uint256 _starId, uint256 _price)
         public
         {
-        require(ownerOf(_tokenId) == msg.sender);
+        require(ownerOf(_starId) == msg.sender, "You have to be the owner of this star for this operation");
 
-        starsForSale[_tokenId] = _price;
-        }
+        starsForSale[_starId] = _price;
+        // starsForSale(_starId, _price);
+    }
 
 
-     function buyStar(uint256 _tokenId) public payable {
-        require(starsForSale[_tokenId] > 0);
+    function buyStar(uint256 _tokenId) public payable {
+        require(starsForSale[_tokenId] > 0, "This star is not for sale yet.");
 
         uint256 starCost = starsForSale[_tokenId];
         address starOwner = ownerOf(_tokenId);
-        require(msg.value >= starCost);
+        require(msg.value >= starCost, "Not enough funds to buy this star");
 
         _removeTokenFrom(starOwner, _tokenId);
         _addTokenTo(msg.sender, _tokenId);
@@ -103,8 +108,17 @@ contract StarNotary is ERC721 {
     }
 
     function tokenIdToStarInfo(uint256 _tokenId) public view returns(string, string, string, string, string, string){
-        return (tokenIdToStarInfo[_tokenId].name, tokenIdToStarInfo[_tokenId].story, tokenIdToStarInfo[_tokenId].ra, tokenIdToStarInfo[_tokenId].dec, tokenIdToStarInfo[_tokenId].mag, tokenIdToStarInfo[_tokenId].cent);
+        return (tokenIdToStarInfo[_tokenId].name,
+            tokenIdToStarInfo[_tokenId].story,
+            tokenIdToStarInfo[_tokenId].ra,
+            tokenIdToStarInfo[_tokenId].dec,
+            tokenIdToStarInfo[_tokenId].mag,
+            tokenIdToStarInfo[_tokenId].cent);
     }
+
+    //  function tokenIdToStarInfo(uint256 _tokenId) public view returns(string){
+    //     return tokenIdToStarInfo[_tokenId].name;
+    // }
 
 
     function mint(uint256 _tokenId) public {
@@ -120,8 +134,12 @@ contract StarNotary is ERC721 {
      @return The address of the owner of the NFT
 
      */
-    function ownerOf(uint256 _tokenId) public view returns (address) {
-       return super.ownerOf(_tokenId);
+    function ownerOf(uint256 _tokenId)
+        public
+        view
+        returns (address)
+    {
+        return super.ownerOf(_tokenId);
     }
 
 

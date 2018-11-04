@@ -16,7 +16,7 @@ contract('StarNotary', accounts => {
 
 
     describe('createStar', () => {
-        it('can create a star and get its info', async function () {
+        it('can create a star and return its info', async function () {
             await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
             // console.log(await this.contract.tokenIdToStarInfo(tokenId))
             assert.deepEqual(await this.contract.tokenIdToStarInfo(tokenId), [name, story, ra, dec, mag, cent]);
@@ -38,11 +38,6 @@ contract('StarNotary', accounts => {
             assert.equal(isExt, true);
         });
 
-        it ("will return the start info", async function(){
-            let starInfo = await this.contract.tokenIdToStarInfo(tokenId);
-            // assert.equal(startInfo, [name, story, ra, dec, mag])
-            console.log(starInfo)
-        })
     });
 
 
