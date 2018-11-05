@@ -49,5 +49,4 @@ Saving artifacts...
 `0xa4FcB2C1F0E37E262E0b01912950632BD6e1D7FF`
 
 ## Transaction hash
-`0x3cf08a8dfccdb9787e2dc9c5469c14f6d5b69567df5bf8266d570d6c4c5dbbd4`
-<!-- `0x147a95eb5b140ac09d3d35fe8e037f55b2904f3ecc0ac38d19f43e2d955a32a3` -->
+`0x147a95eb5b140ac09d3d35fe8e037f55b2904f3ecc0ac38d19f43e2d955a32a3`
