@@ -8,26 +8,6 @@ use your blockchain identity to secure digital assets on the Ethereum platform u
 
 
 ## Deploy output
-```bash
-Using network 'rinkeby'.
-
-Running migration: 1_initial_migration.js
-  Deploying Migrations...
-  ... 0x0436e2a5b3ed8eff166ada394692e468a6a8e4ae1b898e88e7b50caa0783858b
-  Migrations: 0xc130de06b869dd0dc992553e7a3051928852c5cc
-Saving successful migration to network...
-  ... 0x53a45d446fc0e1438b935612b5105df919b871beb4d53793dd5c363676b7464d
-Saving artifacts...
-Running migration: 2_deploy_contracts.js
-  Deploying StarNotary...
-  ... 0x15482a3a63051875ce73ba3a11d4ac6181bc5395628be8fd041f649e6f0056f2
-  StarNotary: 0xdfcf75383fea495d549232eabc22f29b37fd3098
-Saving successful migration to network...
-  ... 0xf23792a0410b6e04164896c54d0c50c8ccf17212633eb7fd71318861e89e8a0f
-Saving artifacts...
-```
-
-
 
 ```
 Compiling ./contracts/StarNotary.sol...
