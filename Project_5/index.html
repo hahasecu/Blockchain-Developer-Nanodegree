@@ -5,145 +5,694 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Star Notary</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
         <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
 
     <body>
         <div class="container">
-            <h1>Star Notary</h1>
 
+            <h1 class="text-center mb-5">Star Notary</h1>
             <div class="row">
-                <label class="bold">Star Name:</label>
-                <label id="star-name"></label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="star name" id="name" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="star story" id="story" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="ra" id="ra" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="dec" id="dec" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="mag" id="mag" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="cent" id="cent" required>
+                </div>
+                <button type="button" class="btn btn-success form-control" id="claim-button" onclick="claimButtonClicked()">Claim star</button>
             </div>
 
+
             <div class="row">
-                <label class="bold">Star Owner:</label>
-                <label id="star-owner"></label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Star Owner</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Sizing example input" id="star-owner">
+                </div>
+
             </div>
 
-            <button id="claim-button" onclick="claimButtonClicked()">Claim Star</button>
+
+            <h2 class="text-center mt-5">Get star by tokenId</h2>
+            <div class="row">
+                <div class="input-group mb-3">
+                    <input type="number" min=0 class="form-control" placeholder="tokenId" id="getByid">
+                </div>
+                <button type="button" class="btn btn-success form-control" id='get-button' onclick="getButtonClicked()">Get star Info</button>
+            </div>
+
+            <ul class="list-group" id="output">
+            </ul>
         </div>
 
-        <script>    
-         
-            if(typeof web3 != 'undefined') { 
-                web3 = new Web3(web3.currentProvider) // what Metamask injected 
+        <script>
+
+            if(typeof web3 != 'undefined') {
+                web3 = new Web3(web3.currentProvider) // what Metamask injected
             } else {
                 // Instantiate and set Ganache as your provider
                 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
             }
 
-            // The default (top) wallet account from a list of test accounts 
+            // The default (top) wallet account from a list of test accounts
             web3.eth.defaultAccount = web3.eth.accounts[0];
 
-            // The interface definition for your smart contract (the ABI) 
+            // The interface definition for your smart contract (the ABI)
             var StarNotary = web3.eth.contract(
                 [
+                {
+                  "constant": true,
+                  "inputs": [
                     {
-                        "constant": false,
-                        "inputs": [],
-                        "name": "claimStar",
-                        "outputs": [],
-                        "payable": false,
-                        "stateMutability": "nonpayable",
-                        "type": "function"
-                    },
-                    {
-                        "anonymous": false,
-                        "inputs": [
-                            {
-                                "indexed": false,
-                                "name": "owner",
-                                "type": "address"
-                            }
-                        ],
-                        "name": "starClaimed",
-                        "type": "event"
-                    },
-                    {
-                        "inputs": [],
-                        "payable": false,
-                        "stateMutability": "nonpayable",
-                        "type": "constructor"
-                    },
-                    {
-                        "constant": true,
-                        "inputs": [],
-                        "name": "starName",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
-                        "payable": false,
-                        "stateMutability": "view",
-                        "type": "function"
-                    },
-                    {
-                        "constant": true,
-                        "inputs": [],
-                        "name": "starOwner",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
-                        "payable": false,
-                        "stateMutability": "view",
-                        "type": "function"
+                      "name": "interfaceId",
+                      "type": "bytes4"
                     }
-                ]
+                  ],
+                  "name": "supportsInterface",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "bool"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "",
+                      "type": "bytes32"
+                    }
+                  ],
+                  "name": "coordHash",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "bool"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "owner",
+                      "type": "address"
+                    }
+                  ],
+                  "name": "balanceOf",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "uint256"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [],
+                  "name": "tokenCount",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "uint256"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "tokenToOwner",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "address"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "anonymous": false,
+                  "inputs": [
+                    {
+                      "indexed": true,
+                      "name": "from",
+                      "type": "address"
+                    },
+                    {
+                      "indexed": true,
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "indexed": true,
+                      "name": "tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "Transfer",
+                  "type": "event"
+                },
+                {
+                  "anonymous": false,
+                  "inputs": [
+                    {
+                      "indexed": true,
+                      "name": "owner",
+                      "type": "address"
+                    },
+                    {
+                      "indexed": true,
+                      "name": "approved",
+                      "type": "address"
+                    },
+                    {
+                      "indexed": true,
+                      "name": "tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "Approval",
+                  "type": "event"
+                },
+                {
+                  "anonymous": false,
+                  "inputs": [
+                    {
+                      "indexed": true,
+                      "name": "owner",
+                      "type": "address"
+                    },
+                    {
+                      "indexed": true,
+                      "name": "operator",
+                      "type": "address"
+                    },
+                    {
+                      "indexed": false,
+                      "name": "approved",
+                      "type": "bool"
+                    }
+                  ],
+                  "name": "ApprovalForAll",
+                  "type": "event"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_ra",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_dec",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_mag",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_cent",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "generateCoordsHash",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "bytes32"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "pure",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_val",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "isEmpty",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "bool"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "pure",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_ra",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_dec",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_mag",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_cent",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "checkIfStarExist",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "bool"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "_name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_story",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_ra",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_dec",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_mag",
+                      "type": "string"
+                    },
+                    {
+                      "name": "_cent",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "createStar",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_starId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "starsForSale",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "uint256"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "_starId",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "_price",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "putStarUpForSale",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "_tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "buyStar",
+                  "outputs": [],
+                  "payable": true,
+                  "stateMutability": "payable",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "tokenIdToStarInfo",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "string"
+                    },
+                    {
+                      "name": "",
+                      "type": "string"
+                    },
+                    {
+                      "name": "",
+                      "type": "string"
+                    },
+                    {
+                      "name": "",
+                      "type": "string"
+                    },
+                    {
+                      "name": "",
+                      "type": "string"
+                    },
+                    {
+                      "name": "",
+                      "type": "string"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "_tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "mint",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "ownerOf",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "address"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "_approved",
+                      "type": "address"
+                    },
+                    {
+                      "name": "_tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "approve",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "getApproved",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "address"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "_operator",
+                      "type": "address"
+                    },
+                    {
+                      "name": "_approved",
+                      "type": "bool"
+                    }
+                  ],
+                  "name": "setApprovalForAll",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": true,
+                  "inputs": [
+                    {
+                      "name": "_owner",
+                      "type": "address"
+                    },
+                    {
+                      "name": "_operator",
+                      "type": "address"
+                    }
+                  ],
+                  "name": "isApprovedForAll",
+                  "outputs": [
+                    {
+                      "name": "",
+                      "type": "bool"
+                    }
+                  ],
+                  "payable": false,
+                  "stateMutability": "view",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "from",
+                      "type": "address"
+                    },
+                    {
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "name": "tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "safeTransferFrom",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "from",
+                      "type": "address"
+                    },
+                    {
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "name": "tokenId",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "_data",
+                      "type": "bytes"
+                    }
+                  ],
+                  "name": "safeTransferFrom",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                },
+                {
+                  "constant": false,
+                  "inputs": [
+                    {
+                      "name": "from",
+                      "type": "address"
+                    },
+                    {
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "name": "tokenId",
+                      "type": "uint256"
+                    }
+                  ],
+                  "name": "transferFrom",
+                  "outputs": [],
+                  "payable": false,
+                  "stateMutability": "nonpayable",
+                  "type": "function"
+                }
+              ]
             );
             // Grab the contract at specified deployed address with the interface defined by the ABI
-            var starNotary = StarNotary.at('0x8040086095e9bc41535094bf03eae1f6178b5260');
-            
-            // Get and display star name
-            starNotary.starName(function (error, result) {
-                if (!error) {
-                    document.getElementById('star-name').innerText = result
-                } else { 
-                    console.log(error);
-                }
-            });
+            var starNotary = StarNotary.at('0xa4FcB2C1F0E37E262E0b01912950632BD6e1D7FF');
+            console.log(starNotary)
 
-            // Get and display star owner
-            starNotary.starOwner(function (error, result) {
-                if (!error) {
-                    document.getElementById('star-owner').innerText = result
-                } else { 
-                    console.log(error);
-                }
-            });
 
-            // Enable claim button being clicked
-            function claimButtonClicked() { 
-                web3.eth.getAccounts(function(error, accounts) { 
-                    if (error) { 
-                        console.log(error)
+            function claimButtonClicked() {
+                web3.eth.getAccounts(function(error, accounts) {
+                    if (error) {
+                        alert(error)
                         return
                     }
-                    var account = accounts[0]
-                    starNotary.claimStar(function (error, result) {
-                        if (!error) {
-                            var starClaimedEvent = starNotary.starClaimed({from: account});
-                            starClaimedEvent.watch(function(error, result) {
-                                if (!error) {
-                                    location.reload();
-                                } else {
-                                    console.log('watching for star claimed event is failing');
-                                }
-                            });
-                        } else { 
-                            console.log(error);
-                        }
-                    });
-                   
+                    const account = accounts[0];
+                    const name = document.getElementById("name").value
+                    const story = document.getElementById("story").value
+                    const ra = document.getElementById("ra").value
+                    const dec = document.getElementById("dec").value
+                    const mag = document.getElementById("mag").value
+                    const cent = document.getElementById("cent").value
+                    if(name && story && ra && dec && mag && cent){
+                    starNotary.createStar.sendTransaction(name, story, ra, dec, mag, cent, {from: account},
+                        function (error, res){
+                            let tokenId;
+                            if (!error){
+                                document.querySelector("#star-owner").value = res;
+                                let starClaimedEvent = starNotary.Transfer()
+                                starClaimedEvent.watch(function(error, res) {
+                                    if (!error) {
+                                        alert("transaction complete!");
+                                    } else {
+                                        alert('watching for star claimed event is failing')
+                                    }
+                                })
+                            } else{
+                                alert(error)
+                            }
+                        })
+                   }else{
+                        alert("all fields are required")
+                   }
                 })
             }
+
+            function getButtonClicked(){
+                web3.eth.getAccounts(function(error, accounts){
+                    if(error){
+                        alert(error)
+                        return
+                    }
+                    const account = accounts[0]
+                    let starId = document.querySelector("#getByid").value;
+                    starNotary.tokenIdToStarInfo.call(starId, function(error, res){
+                        let output = '';
+                        if(!error){
+                            for (r in res){
+                                if (res[r]){
+                                    output += `<li class="list-group-item">${res[r]}</li>`;
+                                }else{
+                                    output = `<li class="list-group-item">Star not exist</li>`;
+                                }
+                            }
+                        }else{
+                            output = `<li class="list-group-item">${error}</li>`;
+                        }
+                        $("#output").html(output);
+                    })
+
+                })
+            }
+
+
         </script>
     </body>
 </html>

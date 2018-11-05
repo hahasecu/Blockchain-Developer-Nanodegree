@@ -17,8 +17,9 @@ contract('StarNotary', accounts => {
 
     describe('createStar', () => {
         it('can create a star and return its info', async function () {
-            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
-            // console.log(await this.contract.tokenIdToStarInfo(tokenId))
+            await this.contract.createStar(name, story, ra, dec, mag, cent, {from: accounts[1]});
+            console.log(await this.contract.tokenCount());
+            console.log(await this.contract.tokenIdToStarInfo(3))
             assert.deepEqual(await this.contract.tokenIdToStarInfo(tokenId), [name, story, ra, dec, mag, cent]);
         });
 
@@ -33,7 +34,7 @@ contract('StarNotary', accounts => {
         });
 
         it("will check if a start already registered", async function (){
-            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[2]});
+            await this.contract.createStar(name, story, ra, dec, mag, cent, {from: accounts[2]});
             let isExt = await this.contract.checkIfStarExist(ra, dec, mag, cent);
             assert.equal(isExt, true);
         });
@@ -45,14 +46,13 @@ contract('StarNotary', accounts => {
     describe('buying and selling stars', () => {
         let user1 = accounts[1]
         let user2 = accounts[2]
-        let randomMaliciousUser = accounts[3]
 
         let starId = tokenId
         let starPrice = web3.toWei(.01, "ether")
 
         beforeEach(async function () {
             // await this.contract.createStar('awesome star!', starId, {from: user1}
-            await this.contract.createStar(name, story, ra, dec, mag, cent, starId, {from: user1})}
+            await this.contract.createStar(name, story, ra, dec, mag, cent, {from: user1})}
             )
 
 
@@ -90,7 +90,7 @@ contract('StarNotary', accounts => {
         let starId = tokenId;
         let starPrice = web3.toWei(.01, "ether")
         beforeEach(async function (){
-            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
+            await this.contract.createStar(name, story, ra, dec, mag, cent, {from: accounts[1]});
             await this.contract.putStarUpForSale(starId, starPrice, {from: accounts[1]})
             tx = await this.contract.approve(accounts[2], tokenId, {from: accounts[1]});
         });
@@ -117,7 +117,7 @@ contract('StarNotary', accounts => {
     describe("can set an operator", () => {
         let tx;
         beforeEach(async function (){
-            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[4]});
+            await this.contract.createStar(name, story, ra, dec, mag, cent, {from: accounts[4]});
             tx = await this.contract.setApprovalForAll(accounts[5], true,
                 {from: accounts[4]});
         });
@@ -139,8 +139,7 @@ contract('StarNotary', accounts => {
         let tx;
 
         beforeEach( async function(){
-            // await this.contract.mint(tokenId, {from: accounts[1]});
-            await this.contract.createStar(name, story, ra, dec, mag, cent, tokenId, {from: accounts[1]});
+            await this.contract.createStar(name, story, ra, dec, mag, cent, {from: accounts[1]});
             tx = await this.contract.safeTransferFrom(accounts[1], accounts[2], tokenId, {from: accounts[1]});
         });
 

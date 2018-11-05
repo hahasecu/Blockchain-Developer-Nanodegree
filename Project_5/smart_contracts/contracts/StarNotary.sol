@@ -21,6 +21,8 @@ contract StarNotary is ERC721 {
     mapping(address => uint256) ownerToBalance;
     mapping(address => mapping(address => bool)) ownerToOperator;
 
+    uint256 public tokenCount;
+
     // Mapping from token ID to approved address
     mapping (uint256 => address) private _tokenApprovals;
 
@@ -60,9 +62,11 @@ contract StarNotary is ERC721 {
         return coordHash[generateCoordsHash(_ra, _dec, _mag, _cent)];
     }
 
-    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cent, uint256 _tokenId)
+    function createStar(string _name, string _story, string _ra, string _dec, string _mag, string _cent)
         public
         {
+        tokenCount++;
+        uint256 _tokenId = tokenCount;
         require(_tokenId != 0, "tokenId can not be 0");
         require(!isEmpty(_ra) || !isEmpty(_dec) || !isEmpty(_mag) || !isEmpty(_cent), "ra, dec, mag can not be empty");
 
